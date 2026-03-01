@@ -1,0 +1,68 @@
+export interface Card {
+  id: string;
+  title: string;
+  keyPoints: string[];
+  quote: string;
+  excerpt: string;
+  sourceUrl: string;
+  status: "new" | "archived" | "saved";
+  createdAt: Date;
+}
+
+export const mockCards: Card[] = [
+  {
+    id: "1",
+    title: "为什么深度工作比忙碌更重要",
+    keyPoints: [
+      "专注力是稀缺资源，需要刻意训练",
+      "每次切换任务会损失 23 分钟恢复时间",
+      "创造性工作需要 90 分钟以上不间断时间",
+    ],
+    quote: "在注意力经济时代，深度工作能力将成为核心竞争力",
+    excerpt:
+      "研究表明，知识工作者平均每 11 分钟就会被打断一次。这种碎片化的工作方式极大地降低了生产力和创造力。要想在复杂的知识工作中产出高质量成果，必须培养深度工作的能力...",
+    sourceUrl: "https://example.com/deep-work",
+    status: "new",
+    createdAt: new Date("2026-03-01"),
+  },
+  {
+    id: "2",
+    title: "如何用费曼技巧真正理解知识",
+    keyPoints: [
+      "用简单语言讲解复杂概念",
+      "找出自己无法解释的部分",
+      "回到原材料深化理解",
+      "简化类比，直到能讲给小孩听",
+    ],
+    quote: "如果你无法简单地解释它，说明你还没真正理解它",
+    excerpt:
+      "费曼学习法的核心在于主动输出。很多人以为看懂了就是学会了，实际上只有能用自己的话讲出来，才算真正掌握。这个方法分为四个步骤：选择概念、教给别人、找出盲点、简化语言...",
+    sourceUrl: "https://example.com/feynman-technique",
+    status: "new",
+    createdAt: new Date("2026-02-28"),
+  },
+  {
+    id: "3",
+    title: "记忆的本质：间隔重复的科学原理",
+    keyPoints: [
+      "遗忘曲线：24小时内遗忘 70%",
+      "最佳复习时机：即将遗忘时",
+      "间隔逐渐拉长可固化长期记忆",
+    ],
+    quote: "记忆不是存储，而是一次次的重新构建",
+    excerpt:
+      "艾宾浩斯在 1885 年发现了遗忘曲线规律。现代神经科学证实，记忆的形成需要多次激活神经通路。间隔重复系统（SRS）利用这一原理，在最佳时间点提醒复习，让短期记忆转化为长期记忆...",
+    sourceUrl: "https://example.com/spaced-repetition",
+    status: "saved",
+    createdAt: new Date("2026-02-27"),
+  },
+];
+
+export const encouragingMessages = [
+  "你已超越 68% 的学习者 🚀",
+  "正在为你生成精华内容...",
+  "AI 正在提炼核心要点 ✨",
+  "知识正在被整理成卡片...",
+  "你的效率比昨天提升了 23%",
+  "优秀！保持这个学习节奏 💪",
+];

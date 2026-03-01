@@ -1,0 +1,9 @@
+{
+  "name": "lazygenius",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "lint": "python3 -m compileall backend && npm --prefix frontend run build",
+    "typecheck": "npm --prefix frontend run build"
+  }
+}

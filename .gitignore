@@ -1,0 +1,16 @@
+.DS_Store
+.venv
+__pycache__/
+.pytest_cache/
+*.pyc
+*.db
+*.sqlite
+backend/.env
+backend/.playwright/
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+node_modules/
+dist/

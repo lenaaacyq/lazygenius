@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+requests
+beautifulsoup4
+openai
+python-dotenv
+lark-oapi
+sqlalchemy
+pytesseract
+pillow
+python-multipart
+readability-lxml
+playwright
