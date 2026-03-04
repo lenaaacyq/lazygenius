@@ -55,6 +55,162 @@ IMAGE_OCR_ENABLED = os.getenv("IMAGE_OCR_ENABLED", "false").lower() in {"1", "tr
 IMAGE_OCR_MAX_IMAGES = int(os.getenv("IMAGE_OCR_MAX_IMAGES", "20"))
 _last_playwright_fetch_ts = 0.0
 
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
+def _extract_meta_summary(html: str) -> str:
+    soup = BeautifulSoup(html, "html.parser")
+    title = (soup.title.get_text(strip=True) if soup.title else "") or ""
+    def pick_meta(attr: str, value: str) -> str:
+        tag = soup.find("meta", attrs={attr: value})
+        if not tag:
+            return ""
+        content = tag.get("content")
+        if content is None:
+            return ""
+        if isinstance(content, list):
+            return " ".join(str(x) for x in content).strip()
+        return str(content).strip()
+
+    description = pick_meta("name", "description") or pick_meta("property", "og:description")
+    citation_title = pick_meta("name", "citation_title")
+    citation_abstract = pick_meta("name", "citation_abstract")
+    citation_doi = pick_meta("name", "citation_doi")
+
+    parts = []
+    if citation_title:
+        parts.append(f"Title: {citation_title}")
+    elif title:
+        parts.append(f"Title: {title}")
+    if description:
+        parts.append(f"Description: {description}")
+    if citation_doi:
+        parts.append(f"DOI: {citation_doi}")
+    if citation_abstract:
+        parts.append(f"Abstract: {citation_abstract}")
+    return "\n".join(parts).strip()
+
+def _parse_arxiv_id(url: str) -> str:
+    path = urlparse(url).path or ""
+    path = path.strip("/")
+    if path.startswith("abs/"):
+        arxiv_id = path.split("/", 1)[1]
+    elif path.startswith("pdf/"):
+        arxiv_id = path.split("/", 1)[1]
+        if arxiv_id.endswith(".pdf"):
+            arxiv_id = arxiv_id[:-4]
+    else:
+        arxiv_id = path.split("/", 1)[-1]
+    arxiv_id = arxiv_id.strip()
+    return arxiv_id
+
+def _fetch_arxiv_abstract(url: str, headers: Dict[str, str]) -> Optional[str]:
+    arxiv_id = _parse_arxiv_id(url)
+    if not arxiv_id:
+        return None
+    try:
+        resp = requests.get(
+            "https://export.arxiv.org/api/query",
+            params={"id_list": arxiv_id},
+            headers=headers,
+            timeout=15,
+            allow_redirects=True,
+        )
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "xml")
+        entry = soup.find("entry")
+        if not entry:
+            return None
+        title_tag = entry.find("title")
+        summary_tag = entry.find("summary")
+        title = (title_tag.get_text(" ", strip=True) if title_tag else "") or ""
+        summary = (summary_tag.get_text(" ", strip=True) if summary_tag else "") or ""
+        authors = [a.get_text(" ", strip=True) for a in entry.find_all("name")]
+        lines = []
+        if title:
+            lines.append(f"Title: {title}")
+        if authors:
+            lines.append(f"Authors: {', '.join(authors[:15])}")
+        if summary:
+            lines.append(f"Abstract: {summary}")
+        text = "\n".join(lines).strip()
+        return text or None
+    except Exception:
+        return None
+
+def _github_api_headers(base_headers: Dict[str, str]) -> Dict[str, str]:
+    headers = dict(base_headers)
+    headers["Accept"] = "application/vnd.github+json"
+    if GITHUB_TOKEN:
+        headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
+    return headers
+
+def _fetch_github_text(url: str, headers: Dict[str, str]) -> Optional[str]:
+    parsed = urlparse(url)
+    parts = [p for p in (parsed.path or "").split("/") if p]
+    if len(parts) < 2:
+        return None
+    owner, repo = parts[0], parts[1]
+    api_headers = _github_api_headers(headers)
+
+    try:
+        if len(parts) >= 4 and parts[2] in {"issues", "pull"} and parts[3].isdigit():
+            number = int(parts[3])
+            issue_resp = requests.get(
+                f"https://api.github.com/repos/{owner}/{repo}/issues/{number}",
+                headers=api_headers,
+                timeout=15,
+                allow_redirects=True,
+            )
+            issue_resp.raise_for_status()
+            issue = issue_resp.json()
+            title = (issue.get("title") or "").strip()
+            body = (issue.get("body") or "").strip()
+            lines = [f"GitHub: {owner}/{repo} #{number}"]
+            if title:
+                lines.append(f"Title: {title}")
+            if body:
+                lines.append(body)
+            text = "\n\n".join([l for l in lines if l]).strip()
+            return text or None
+
+        repo_resp = requests.get(
+            f"https://api.github.com/repos/{owner}/{repo}",
+            headers=api_headers,
+            timeout=15,
+            allow_redirects=True,
+        )
+        if repo_resp.ok:
+            repo_data = repo_resp.json()
+            repo_desc = (repo_data.get("description") or "").strip()
+        else:
+            repo_desc = ""
+
+        readme_resp = requests.get(
+            f"https://api.github.com/repos/{owner}/{repo}/readme",
+            headers=api_headers,
+            timeout=15,
+            allow_redirects=True,
+        )
+        readme = ""
+        if readme_resp.ok:
+            data = readme_resp.json()
+            content_b64 = (data.get("content") or "").strip()
+            if content_b64:
+                try:
+                    readme = base64.b64decode(content_b64.encode("utf-8")).decode("utf-8", errors="ignore").strip()
+                except Exception:
+                    readme = ""
+
+        lines = [f"GitHub Repo: {owner}/{repo}"]
+        if repo_desc:
+            lines.append(f"Description: {repo_desc}")
+        if readme:
+            lines.append(readme)
+        text = "\n\n".join([l for l in lines if l]).strip()
+        return text or None
+    except Exception:
+        return None
+
 def extract_text_from_html(html: str) -> str:
     doc = Document(html)
     summary_html = doc.summary(html_partial=True)
@@ -166,6 +322,12 @@ SYSTEM_PROMPT = """
 2. 拒绝干瘪的机器总结与水文废话。让用户在 15 秒内获得 "Aha Moment"（顿悟），掌握底层逻辑。
 3. 保持“说人话”的温度，兼具锋利的专业含金量与极强的内容吸引力。
 
+请额外严格遵守“长度与符号约束”（重要，必须满足，否则会导致前端展示异常）：
+1. "hook_title" 必须短，尽量 20 个中文以内（或 40 个英文字符以内），不要换行。
+2. "logic_breakdown" 最多 3 条；每条尽量 60 个中文以内（或 120 个英文字符以内），不要使用省略号（… 或 ...）。
+3. "golden_quote" 必须短，尽量 45 个中文以内（或 100 个英文字符以内），不要使用省略号（… 或 ...）。
+4. 避免输出超长英文原句，必要时改写为更短、更好读的中文表达。
+
 请严格输出 JSON 格式，包含以下字段：
 1. "hook_title": (字符串) 极具社交传播力的吸睛标题，采用"反直觉/制造认知差 + 抛出核心价值"的句式，可包含 1 个契合主题的 Emoji，不超过 25 字。
 2. "logic_breakdown": (数组) 知识骨架拆解。用 3-4 个极其精炼且带有递进关系的短句支撑核心观点。
@@ -202,6 +364,14 @@ def get_content_from_url(url: str, auth_cookie: Optional[str] = None, xhs_sessio
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
         domain = (urlparse(url).hostname or "").lower()
+        if domain.endswith("arxiv.org"):
+            arxiv_text = _fetch_arxiv_abstract(url, headers)
+            if arxiv_text:
+                return arxiv_text
+        if domain.endswith("github.com"):
+            github_text = _fetch_github_text(url, headers)
+            if github_text:
+                return github_text
         allow_domains = {d.strip().lower() for d in AUTH_COOKIE_DOMAINS.split(",") if d.strip()}
         if xhs_session_id and domain and any(domain.endswith(d) for d in allow_domains):
             result = xhs_login.get_html_and_ocr_with_session(url, xhs_session_id, IMAGE_OCR_ENABLED, IMAGE_OCR_MAX_IMAGES)
@@ -224,6 +394,9 @@ def get_content_from_url(url: str, auth_cookie: Optional[str] = None, xhs_sessio
         response.raise_for_status()
         html = response.text
         text = extract_text_from_html(html)
+        meta = _extract_meta_summary(html)
+        if meta and (not text or len(text) < CONTENT_MIN_CHARS):
+            text = f"{meta}\n\n{text}".strip() if text else meta
         needs_playwright = not text or len(text) < CONTENT_MIN_CHARS or looks_like_login_wall(text)
         allow_domains = {d.strip().lower() for d in PLAYWRIGHT_DOMAINS.split(",") if d.strip()}
         if PLAYWRIGHT_ENABLED and domain and any(domain.endswith(d) for d in allow_domains) and (needs_playwright or IMAGE_OCR_ENABLED):
@@ -248,9 +421,21 @@ def generate_flashcard_from_text(text: str) -> Optional[Dict[str, Any]]:
     if not client:
         raise ValueError("AI client is not initialized. Check API_KEY.")
 
+    max_input_chars = int(os.getenv("MODEL_MAX_INPUT_CHARS", "16000"))
+
+    def shrink_input(s: str, target: int) -> str:
+        s = (s or "").strip()
+        if len(s) <= target:
+            return s
+        head = max(0, int(target * 0.75))
+        tail = max(0, target - head)
+        return (s[:head] + "\n...\n" + (s[-tail:] if tail else "")).strip()
+
+    user_text = shrink_input(text, max_input_chars)
+
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": text}
+        {"role": "user", "content": user_text}
     ]
     try:
         response = client.chat.completions.create(
@@ -279,6 +464,36 @@ def generate_flashcard_from_text(text: str) -> Optional[Dict[str, Any]]:
             print(f"AI debug: url={url!r}, status={resp.status_code}, auth_len={len(API_KEY) if API_KEY else 0}, auth_prefix={(API_KEY[:3] if API_KEY else '')!r}")
             if resp.status_code >= 400:
                 print(f"AI debug error: {resp.text[:300]}")
+                data = None
+                try:
+                    data = resp.json()
+                except Exception:
+                    data = None
+                token_limit = (
+                    resp.status_code == 400
+                    and isinstance(data, dict)
+                    and isinstance(data.get("error"), dict)
+                    and "token limit" in str(data["error"].get("message", "")).lower()
+                )
+                if token_limit:
+                    tighter = max(4000, int(max_input_chars * 0.6))
+                    retry_messages = [
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": shrink_input(text, tighter)},
+                    ]
+                    payload["messages"] = retry_messages
+                    resp2 = requests.post(url, headers=headers, json=payload, timeout=30)
+                    print(f"AI debug: url={url!r}, status={resp2.status_code}, auth_len={len(API_KEY) if API_KEY else 0}, auth_prefix={(API_KEY[:3] if API_KEY else '')!r}")
+                    if resp2.status_code >= 400:
+                        print(f"AI debug error: {resp2.text[:300]}")
+                        return None
+                    flashcard_data = resp2.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+                    if flashcard_data:
+                        return json.loads(flashcard_data)
+                return None
+            flashcard_data = resp.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+            if flashcard_data:
+                return json.loads(flashcard_data)
         except Exception as debug_error:
             print(f"AI debug request failed: {debug_error}")
         return None

@@ -13,8 +13,10 @@ from services import ocr
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGIN_URL = os.getenv("PLAYWRIGHT_LOGIN_URL", "https://www.xiaohongshu.com")
 SESSION_BASE_DIR = os.getenv("PLAYWRIGHT_SESSIONS_DIR", os.path.join(BASE_DIR, ".playwright_sessions"))
-SESSION_TTL = int(os.getenv("PLAYWRIGHT_SESSION_TTL", "1800"))
-MAX_SESSIONS = int(os.getenv("PLAYWRIGHT_MAX_SESSIONS", "5"))
+SESSION_TTL = int(os.getenv("PLAYWRIGHT_SESSION_TTL", "7200"))
+SESSION_TTL_LOGGED_IN = int(os.getenv("PLAYWRIGHT_SESSION_TTL_LOGGED_IN", str(SESSION_TTL)))
+SESSION_TTL_PENDING = int(os.getenv("PLAYWRIGHT_SESSION_TTL_PENDING", "1800"))
+MAX_SESSIONS = int(os.getenv("PLAYWRIGHT_MAX_SESSIONS", "1"))
 HEADLESS = os.getenv("PLAYWRIGHT_HEADLESS", "true").lower() in {"1", "true", "yes"}
 
 _sessions: Dict[str, Dict[str, Any]] = {}
@@ -41,7 +43,10 @@ def _cleanup_expired():
     now = time.time()
     expired = []
     for session_id, session in _sessions.items():
-        if now - session["created_at"] > SESSION_TTL:
+        logged_in = bool(session.get("logged_in"))
+        ttl = SESSION_TTL_LOGGED_IN if logged_in else SESSION_TTL_PENDING
+        last_seen_at = float(session.get("last_seen_at") or session.get("created_at") or 0.0)
+        if now - last_seen_at > ttl:
             expired.append(session_id)
     for session_id in expired:
         _close_session(session_id)
@@ -68,6 +73,7 @@ def start_session() -> Optional[str]:
         _cleanup_expired()
         if len(_sessions) >= MAX_SESSIONS:
             return None
+        now = time.time()
         session_id = uuid.uuid4().hex
         user_data_dir = os.path.join(SESSION_BASE_DIR, session_id)
         os.makedirs(user_data_dir, exist_ok=True)
@@ -85,7 +91,9 @@ def start_session() -> Optional[str]:
             pass
         _sessions[session_id] = {
             "id": session_id,
-            "created_at": time.time(),
+            "created_at": now,
+            "last_seen_at": now,
+            "logged_in": False,
             "user_data_dir": user_data_dir,
             "playwright": playwright,
             "context": context,
@@ -101,6 +109,7 @@ def get_status(session_id: str) -> Optional[Dict[str, Any]]:
     if not session:
         return None
     with session["lock"]:
+        session["last_seen_at"] = time.time()
         page = session.get("page")
         if page is None or page.is_closed():
             page = session["context"].new_page()
@@ -120,6 +129,7 @@ def get_status(session_id: str) -> Optional[Dict[str, Any]]:
             logged_in = not looks_like_login_wall(text)
         except Exception:
             logged_in = False
+        session["logged_in"] = logged_in
         return {
             "session_id": session_id,
             "logged_in": logged_in,
@@ -137,6 +147,7 @@ def get_html_and_ocr_with_session(url: str, session_id: str, image_ocr_enabled: 
     if not session:
         return None
     with session["lock"]:
+        session["last_seen_at"] = time.time()
         context = session["context"]
         page = context.new_page()
         try:

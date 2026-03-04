@@ -78,6 +78,37 @@ def normalize_list(value: Any):
         return []
     return [str(value)]
 
+def truncate_text(value: Any, limit: int) -> str:
+    text = ("" if value is None else str(value)).strip()
+    if len(text) <= limit:
+        return text
+    return text[:limit].rstrip()
+
+def display_len(value: Any) -> int:
+    text = ("" if value is None else str(value))
+    total = 0
+    for ch in text:
+        if ch == "\n":
+            continue
+        total += 2 if ord(ch) > 127 else 1
+    return total
+
+def truncate_by_display_len(value: Any, limit: int) -> str:
+    text = ("" if value is None else str(value)).strip()
+    if display_len(text) <= limit:
+        return text
+    out = []
+    total = 0
+    for ch in text:
+        if ch == "\n":
+            continue
+        w = 2 if ord(ch) > 127 else 1
+        if total + w > limit:
+            break
+        out.append(ch)
+        total += w
+    return "".join(out).rstrip()
+
 def resolve_strategy(strategy: str, rand: float) -> str:
     if strategy != "hybrid":
         return strategy
@@ -194,16 +225,24 @@ def generate_card(payload: FlashcardGenerateInput, db: Session = Depends(get_db)
     tags = normalize_list(flashcard.get("tags"))
     logic_breakdown = normalize_list(flashcard.get("logic_breakdown"))
     information_extraction = normalize_list(flashcard.get("information_extraction"))
+    hook_title = truncate_by_display_len(flashcard.get("hook_title", ""), 40)
+    golden_quote = truncate_by_display_len(flashcard.get("golden_quote", ""), 110)
+    core_insight = truncate_by_display_len(flashcard.get("core_insight", ""), 180)
+    actionable_takeaway = truncate_by_display_len(flashcard.get("actionable_takeaway", ""), 180)
+    visual_vibe = truncate_by_display_len(flashcard.get("visual_vibe", ""), 90)
+    content_type = truncate_by_display_len(flashcard.get("content_type", ""), 60)
+    logic_breakdown = [truncate_by_display_len(x, 120) for x in logic_breakdown][:3]
+    information_extraction = [truncate_text(x, 160) for x in information_extraction][:6]
     card = Flashcard(
-        hook_title=flashcard.get("hook_title", ""),
-        core_insight=flashcard.get("core_insight", ""),
+        hook_title=hook_title,
+        core_insight=core_insight,
         logic_breakdown=json.dumps(logic_breakdown, ensure_ascii=False),
-        actionable_takeaway=flashcard.get("actionable_takeaway", ""),
-        golden_quote=flashcard.get("golden_quote", ""),
+        actionable_takeaway=actionable_takeaway,
+        golden_quote=golden_quote,
         xiaohongshu_copy=flashcard.get("xiaohongshu_copy", ""),
         tags=json.dumps(tags, ensure_ascii=False),
-        visual_vibe=flashcard.get("visual_vibe", ""),
-        content_type=flashcard.get("content_type", ""),
+        visual_vibe=visual_vibe,
+        content_type=content_type,
         information_extraction=json.dumps(information_extraction, ensure_ascii=False),
         ocr_text=flashcard.get("ocr_text", ""),
         source_excerpt=source_excerpt,

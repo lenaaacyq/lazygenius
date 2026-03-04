@@ -7,7 +7,7 @@ router = APIRouter(prefix="/auth/xhs")
 def start_login():
     session_id = xhs_login.start_session()
     if not session_id:
-        raise HTTPException(status_code=429, detail="Too many active sessions")
+        raise HTTPException(status_code=429, detail="服务繁忙，请稍后再试")
     return {"session_id": session_id}
 
 @router.get("/status")
@@ -18,7 +18,7 @@ def login_status(session_id: str = Query(...)):
     return status
 
 @router.post("/close")
-def close_login(session_id: str):
+def close_login(session_id: str = Query(...)):
     closed = xhs_login.close_session(session_id)
     if not closed:
         raise HTTPException(status_code=404, detail="Session not found")

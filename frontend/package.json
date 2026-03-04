@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "use:local": "node scripts/switch-api.mjs local",
+    "use:phone": "node scripts/switch-api.mjs phone"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

@@ -197,7 +197,7 @@ export default function Flashcard() {
 
       <div className="relative z-10">
         {currentView.type === "home" ? (
-          <div className="min-h-screen pb-8 overflow-y-auto">
+          <div className="min-h-screen pb-8">
             <Header mode={mode} onModeChange={setMode} />
 
             <div className="px-8 mb-4">

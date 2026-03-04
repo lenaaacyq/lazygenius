@@ -265,6 +265,31 @@ html, body, #root {
   justify-content: center;
 }
 
+.clamp-1,
+.clamp-2,
+.clamp-3,
+.clamp-4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.clamp-1 {
+  -webkit-line-clamp: 1;
+}
+
+.clamp-2 {
+  -webkit-line-clamp: 2;
+}
+
+.clamp-3 {
+  -webkit-line-clamp: 3;
+}
+
+.clamp-4 {
+  -webkit-line-clamp: 4;
+}
+
 .card-back {
   cursor: pointer;
   padding-bottom: 36px;
