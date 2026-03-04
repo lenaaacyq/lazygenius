@@ -40,7 +40,7 @@ export default function InputPanel({
         borderColor: "border-blue-500/30",
         hoverBg: "hover:bg-gradient-to-br hover:from-blue-500/10 hover:to-cyan-500/10",
         iconColor: "text-white",
-        description: "互联网档案馆历史快照",
+        description: "支持一线前沿论文",
         placeholder: "粘贴 Archive 链接...",
         needQR: false,
       },
@@ -321,7 +321,7 @@ export default function InputPanel({
                   />
                 </div>
                 <p className="mb-6 text-xs text-gray-500">
-                  支持链接：小红书（需扫码）、GitHub、Archive 等公开网页
+                  支持链接：小红书（需扫码）、GitHub、Archive（前沿论文）等公开网页
                 </p>
 
                 <div className="flex gap-3">
