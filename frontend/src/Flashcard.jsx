@@ -6,6 +6,7 @@ import InputPanel from "./components/InputPanel";
 import LoadingState from "./components/LoadingState";
 import AddLinkButton from "./components/AddLinkButton";
 import CardDetail from "./components/CardDetail";
+import BottomActions from "./components/BottomActions";
 
 const API_BASE = import.meta.env.VITE_API_BASE || (typeof window !== "undefined" && window.location.hostname !== "localhost"
   ? `http://${window.location.hostname}:8000`
@@ -223,6 +224,9 @@ export default function Flashcard() {
                   onSwipeLeft={handleArchive}
                   onSwipeRight={handleSave}
                 />
+                <div className="hidden md:block">
+                  <BottomActions onSave={handleSave} onArchive={handleArchive} />
+                </div>
               </>
             ) : (
               <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
