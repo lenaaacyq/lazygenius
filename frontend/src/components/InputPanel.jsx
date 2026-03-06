@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Link as LinkIcon, Sparkles, QrCode, Github, Archive, ChevronRight } from "lucide-react";
+import { X, Link as LinkIcon, Sparkles, Github, Archive, ChevronRight, FileText, Image } from "lucide-react";
 import { toast } from "sonner";
 
 export default function InputPanel({
@@ -10,18 +10,16 @@ export default function InputPanel({
   apiBase,
 }) {
   const [step, setStep] = useState("select");
-  const [selectedPlatformId, setSelectedPlatformId] = useState(null);
+  const [selectedSourceId, setSelectedSourceId] = useState(null);
   const [url, setUrl] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const [loginImage, setLoginImage] = useState("");
-  const [loginReady, setLoginReady] = useState(false);
-  const [isStarting, setIsStarting] = useState(false);
-  const [sessionId, setSessionId] = useState("");
+  const [text, setText] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
-  const platforms = useMemo(
+  const sources = useMemo(
     () => [
       {
         id: "github",
+        type: "url",
         name: "GitHub",
         icon: Github,
         iconBg: "bg-gradient-to-br from-gray-700 to-gray-800",
@@ -30,10 +28,11 @@ export default function InputPanel({
         iconColor: "text-white",
         description: "支持仓库、Issue、PR 等",
         placeholder: "粘贴 GitHub 链接...",
-        needQR: false,
+        helper: "支持链接：GitHub、Archive 等公开网页",
       },
       {
         id: "archive",
+        type: "url",
         name: "Archive",
         icon: Archive,
         iconBg: "bg-gradient-to-br from-blue-500 to-cyan-600",
@@ -42,155 +41,95 @@ export default function InputPanel({
         iconColor: "text-white",
         description: "支持一线前沿论文",
         placeholder: "粘贴 Archive 链接...",
-        needQR: false,
+        helper: "支持链接：GitHub、Archive 等公开网页",
       },
       {
-        id: "xiaohongshu",
-        name: "小红书",
-        icon: QrCode,
-        iconBg: "bg-gradient-to-br from-red-500 to-pink-600",
-        borderColor: "border-white/10",
-        hoverBg: "hover:bg-white/5",
+        id: "text",
+        type: "text",
+        name: "长文本",
+        icon: FileText,
+        iconBg: "bg-gradient-to-br from-emerald-500 to-teal-600",
+        borderColor: "border-emerald-500/30",
+        hoverBg: "hover:bg-gradient-to-br hover:from-emerald-500/10 hover:to-teal-500/10",
         iconColor: "text-white",
-        description: "未上线，敬请期待～",
-        placeholder: "粘贴小红书链接...",
-        needQR: true,
-        enabled: false,
+        description: "粘贴长文本生成卡片",
+        placeholder: "粘贴或输入长文本...",
+        helper: "适合长文章、会议纪要、学习笔记",
+      },
+      {
+        id: "image",
+        type: "image",
+        name: "图片",
+        icon: Image,
+        iconBg: "bg-gradient-to-br from-amber-500 to-orange-500",
+        borderColor: "border-amber-500/30",
+        hoverBg: "hover:bg-gradient-to-br hover:from-amber-500/10 hover:to-orange-500/10",
+        iconColor: "text-white",
+        description: "上传图片提取信息",
+        helper: "支持截图、海报、图文等图片内容",
       },
     ],
     []
   );
 
-  const selectedPlatform = useMemo(
-    () => platforms.find((p) => p.id === selectedPlatformId) || null,
-    [platforms, selectedPlatformId]
+  const selectedSource = useMemo(
+    () => sources.find((p) => p.id === selectedSourceId) || null,
+    [sources, selectedSourceId]
   );
 
   useEffect(() => {
     if (!isOpen) return;
-    const stored = localStorage.getItem("xhs_login_session") || "";
-    setSessionId(stored);
-    setLoginReady(false);
-    setLoginError("");
-    setLoginImage("");
-    setIsStarting(false);
     setStep("select");
-    setSelectedPlatformId(null);
+    setSelectedSourceId(null);
     setUrl("");
+    setText("");
+    setImageFile(null);
   }, [isOpen]);
 
-  const fetchStatus = useCallback(async (currentSessionId) => {
-    if (!currentSessionId) return;
-    try {
-      const res = await fetch(`${apiBase}/auth/xhs/status?session_id=${currentSessionId}`);
-      if (!res.ok) {
-        throw new Error("status_failed");
-      }
-      const data = await res.json();
-      setLoginImage(data.screenshot_base64 || "");
-      const ready = Boolean(data.logged_in);
-      setLoginReady(ready);
-    } catch (e) {
-      setLoginError("获取二维码失败，请重试");
-    }
-  }, [apiBase]);
-
-  useEffect(() => {
-    if (!isOpen || !sessionId) return;
-    fetchStatus(sessionId);
-  }, [isOpen, sessionId, fetchStatus]);
-
-  useEffect(() => {
-    if (!isOpen || step !== "qrcode" || selectedPlatformId !== "xiaohongshu" || !sessionId) return;
-    const timer = setInterval(() => fetchStatus(sessionId), 3000);
-    return () => clearInterval(timer);
-  }, [isOpen, step, selectedPlatformId, sessionId, fetchStatus]);
-
-  const startLogin = async () => {
-    if (isStarting) return;
-    setIsStarting(true);
-    setLoginError("");
-    try {
-      const res = await fetch(`${apiBase}/auth/xhs/start`, { method: "POST" });
-      if (!res.ok) {
-        let detail = "";
-        try {
-          const data = await res.json();
-          detail = data?.detail || "";
-        } catch (err) {
-          detail = "";
-        }
-        throw new Error(detail || "start_failed");
-      }
-      const data = await res.json();
-      const nextSessionId = data.session_id || "";
-      if (!nextSessionId) {
-        throw new Error("missing_session");
-      }
-      localStorage.setItem("xhs_login_session", nextSessionId);
-      setSessionId(nextSessionId);
-      setLoginReady(false);
-      setLoginImage("");
-      await fetchStatus(nextSessionId);
-    } catch (e) {
-      const message = e instanceof Error ? e.message : "";
-      setLoginError(message === "服务繁忙，请稍后再试" ? message : "启动登录失败，请稍后重试");
-    } finally {
-      setIsStarting(false);
-    }
-  };
-
-  const closeLogin = async () => {
-    if (!sessionId) return;
-    try {
-      await fetch(`${apiBase}/auth/xhs/close?session_id=${sessionId}`, { method: "POST" });
-    } catch (e) {
-    } finally {
-      localStorage.removeItem("xhs_login_session");
-      setSessionId("");
-      setLoginReady(false);
-      setLoginImage("");
-      setLoginError("");
-    }
-  };
-
-  const handleSelectPlatform = async (platformId) => {
-    const platform = platforms.find((p) => p.id === platformId) || null;
-    if (platform && platform.enabled === false) {
-      toast("未上线，敬请期待～");
+  const handleSelectSource = (sourceId) => {
+    const source = sources.find((p) => p.id === sourceId) || null;
+    if (!source) {
+      toast("暂不支持该类型");
       return;
     }
-    setSelectedPlatformId(platformId);
-    setLoginError("");
-    if (platformId === "xiaohongshu") {
-      setStep("qrcode");
-      if (sessionId) {
-        await fetchStatus(sessionId);
-      }
-      return;
-    }
+    setSelectedSourceId(sourceId);
     setStep("input");
   };
 
   const handleBackToSelect = () => {
     setStep("select");
-    setSelectedPlatformId(null);
+    setSelectedSourceId(null);
     setUrl("");
-    setLoginError("");
+    setText("");
+    setImageFile(null);
   };
 
   const handleClose = () => {
     setStep("select");
-    setSelectedPlatformId(null);
+    setSelectedSourceId(null);
     setUrl("");
-    setLoginError("");
+    setText("");
+    setImageFile(null);
     onClose();
   };
 
   const handleGenerate = () => {
-    if (url.trim()) {
-      onGenerate(url, sessionId);
+    if (!selectedSource) return;
+    if (selectedSource.type === "url" && url.trim()) {
+      onGenerate({ type: "url", url: url.trim() });
       setUrl("");
+      handleClose();
+      return;
+    }
+    if (selectedSource.type === "text" && text.trim()) {
+      onGenerate({ type: "text", text: text.trim() });
+      setText("");
+      handleClose();
+      return;
+    }
+    if (selectedSource.type === "image" && imageFile) {
+      onGenerate({ type: "image", file: imageFile });
+      setImageFile(null);
       handleClose();
     }
   };
@@ -223,7 +162,7 @@ export default function InputPanel({
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-purple-400" />
                     <h3 className="text-xl font-bold text-white tracking-tight">
-                      选择平台
+                      选择内容类型
                     </h3>
                   </div>
                   <button
@@ -235,28 +174,27 @@ export default function InputPanel({
                 </div>
 
                 <div className="space-y-3">
-                  {platforms.map((platform) => {
-                    const Icon = platform.icon;
-                    const disabled = platform.enabled === false;
+                  {sources.map((source) => {
+                    const Icon = source.icon;
                     return (
                       <motion.button
-                        key={platform.id}
-                        onClick={() => handleSelectPlatform(platform.id)}
+                        key={source.id}
+                        onClick={() => handleSelectSource(source.id)}
                         whileTap={{ scale: 0.98 }}
-                        className={`w-full flex items-center gap-4 p-4 rounded-2xl border ${platform.borderColor} ${platform.hoverBg} transition-all bg-white/5 ${disabled ? "opacity-60" : ""}`}
+                        className={`w-full flex items-center gap-4 p-4 rounded-2xl border ${source.borderColor} ${source.hoverBg} transition-all bg-white/5`}
                         style={{
                           boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05)",
                         }}
                       >
-                        <div className={`w-12 h-12 rounded-xl ${platform.iconBg} flex items-center justify-center shadow-lg flex-shrink-0`}>
-                          <Icon className={`w-6 h-6 ${platform.iconColor}`} />
+                        <div className={`w-12 h-12 rounded-xl ${source.iconBg} flex items-center justify-center shadow-lg flex-shrink-0`}>
+                          <Icon className={`w-6 h-6 ${source.iconColor}`} />
                         </div>
                         <div className="flex-1 text-left">
                           <h4 className="text-base font-bold text-white mb-1">
-                            {platform.name}
+                            {source.name}
                           </h4>
                           <p className="text-xs text-gray-400">
-                            {platform.description}
+                            {source.description}
                           </p>
                         </div>
                         <ChevronRight className="w-5 h-5 text-gray-500" />
@@ -267,14 +205,14 @@ export default function InputPanel({
 
                 <div className="mt-4 p-3 rounded-xl bg-purple-500/10 border border-purple-500/30">
                   <p className="text-xs text-purple-300 text-center">
-                    点击上方平台开始添加内容
+                    选择类型后开始添加内容
                   </p>
                 </div>
               </div>
             </motion.div>
           ) : null}
 
-          {step === "input" && selectedPlatform ? (
+          {step === "input" && selectedSource ? (
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -294,34 +232,65 @@ export default function InputPanel({
                     <X className="w-5 h-5" />
                   </button>
                   <div className="flex items-center gap-2 flex-1">
-                    <div className={`w-10 h-10 rounded-xl ${selectedPlatform.iconBg} flex items-center justify-center`}>
-                      <selectedPlatform.icon className="w-5 h-5 text-white" />
+                    <div className={`w-10 h-10 rounded-xl ${selectedSource.iconBg} flex items-center justify-center`}>
+                      <selectedSource.icon className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-white tracking-tight">
-                      {selectedPlatform.name}
+                      {selectedSource.name}
                     </h3>
                   </div>
                 </div>
 
-                <div className="relative mb-2">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-                    <LinkIcon className="w-5 h-5" />
+                {selectedSource.type === "url" ? (
+                  <div className="relative mb-2">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                      <LinkIcon className="w-5 h-5" />
+                    </div>
+                    <input
+                      type="url"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
+                      placeholder={selectedSource.placeholder}
+                      className="w-full h-14 pl-12 pr-4 rounded-2xl bg-black/40 backdrop-blur-xl border-2 border-white/10 focus:border-purple-500 focus:bg-black/60 outline-none transition-all text-white placeholder:text-gray-500 font-medium"
+                      style={{
+                        boxShadow: "inset 0 2px 8px rgba(0, 0, 0, 0.3)",
+                      }}
+                      autoFocus
+                    />
                   </div>
-                  <input
-                    type="url"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
-                    placeholder={selectedPlatform.placeholder}
-                    className="w-full h-14 pl-12 pr-4 rounded-2xl bg-black/40 backdrop-blur-xl border-2 border-white/10 focus:border-purple-500 focus:bg-black/60 outline-none transition-all text-white placeholder:text-gray-500 font-medium"
-                    style={{
-                      boxShadow: "inset 0 2px 8px rgba(0, 0, 0, 0.3)",
-                    }}
-                    autoFocus
-                  />
-                </div>
+                ) : null}
+
+                {selectedSource.type === "text" ? (
+                  <div className="mb-2">
+                    <textarea
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      placeholder={selectedSource.placeholder}
+                      rows={6}
+                      className="w-full rounded-2xl bg-black/40 backdrop-blur-xl border-2 border-white/10 focus:border-purple-500 focus:bg-black/60 outline-none transition-all text-white placeholder:text-gray-500 font-medium p-4 resize-none"
+                      autoFocus
+                    />
+                  </div>
+                ) : null}
+
+                {selectedSource.type === "image" ? (
+                  <div className="mb-2">
+                    <label className="w-full h-32 rounded-2xl border-2 border-dashed border-white/15 bg-black/30 flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-purple-500/50 hover:text-gray-200 transition-colors cursor-pointer">
+                      <Image className="w-6 h-6" />
+                      <span className="text-sm font-medium">{imageFile ? imageFile.name : "点击选择图片"}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                ) : null}
+
                 <p className="mb-6 text-xs text-gray-500">
-                  支持链接：小红书（需扫码）、GitHub、Archive（前沿论文）等公开网页
+                  {selectedSource.helper}
                 </p>
 
                 <div className="flex gap-3">
@@ -336,7 +305,11 @@ export default function InputPanel({
                   </button>
                   <button
                     onClick={handleGenerate}
-                    disabled={!url.trim()}
+                    disabled={
+                      (selectedSource.type === "url" && !url.trim())
+                      || (selectedSource.type === "text" && !text.trim())
+                      || (selectedSource.type === "image" && !imageFile)
+                    }
                     className="flex-1 h-12 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-purple-500/50 transition-all border border-white/20"
                     style={{
                       boxShadow: "0 8px 24px -8px rgba(168, 85, 247, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
@@ -348,119 +321,6 @@ export default function InputPanel({
               </div>
             </motion.div>
           ) : null}
-
-          <AnimatePresence>
-            {step === "qrcode" && selectedPlatformId === "xiaohongshu" ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed inset-0 flex items-center justify-center z-[60] px-6"
-              >
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-black/80 backdrop-blur-md"
-                  onClick={handleBackToSelect}
-                />
-
-                <motion.div
-                  initial={{ y: 50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 50, opacity: 0 }}
-                  className="relative bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-3xl p-8 max-w-sm w-full border border-white/10 shadow-2xl"
-                  style={{
-                    boxShadow: "0 20px 60px -12px rgba(0, 0, 0, 0.8), 0 8px 24px -8px rgba(239, 68, 68, 0.3)",
-                  }}
-                >
-                  <button
-                    onClick={handleBackToSelect}
-                    className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/10 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center shadow-lg shadow-red-500/30">
-                      <QrCode className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">小红书扫码</h3>
-                      <p className="text-xs text-gray-400">
-                        {loginReady ? "已登录，可继续添加链接" : sessionId ? "等待扫码确认" : "未登录"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {loginError ? (
-                    <div className="text-xs text-rose-400 mb-3">{loginError}</div>
-                  ) : null}
-
-                  <div className="mb-6 p-4 rounded-2xl bg-black/30 border border-white/10 overflow-hidden flex items-center justify-center min-h-[220px]">
-                    {loginImage ? (
-                      <img
-                        src={`data:image/jpeg;base64,${loginImage}`}
-                        alt="小红书扫码登录"
-                        className="w-full h-auto"
-                      />
-                    ) : (
-                      <div className="text-xs text-gray-500">二维码加载中...</div>
-                    )}
-                  </div>
-
-                  <div className="flex gap-3">
-                    {loginReady ? (
-                      <>
-                        <button
-                          onClick={handleBackToSelect}
-                          className="flex-1 h-11 rounded-xl bg-white/5 text-gray-300 font-semibold hover:bg-white/10 transition-colors border border-white/10 text-sm"
-                        >
-                          返回
-                        </button>
-                        <button
-                          onClick={() => setStep("input")}
-                          className="flex-1 h-11 rounded-xl bg-gradient-to-r from-red-500 to-pink-600 text-white font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all border border-white/20 text-sm"
-                          style={{
-                            boxShadow: "0 8px 24px -8px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
-                          }}
-                        >
-                          继续添加链接
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          onClick={handleBackToSelect}
-                          className="flex-1 h-11 rounded-xl bg-white/5 text-gray-300 font-semibold hover:bg-white/10 transition-colors border border-white/10 text-sm"
-                        >
-                          返回
-                        </button>
-                        <button
-                          onClick={sessionId ? () => fetchStatus(sessionId) : startLogin}
-                          disabled={isStarting}
-                          className="flex-1 h-11 rounded-xl bg-gradient-to-r from-red-500 to-pink-600 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-red-500/50 transition-all border border-white/20 text-sm"
-                          style={{
-                            boxShadow: "0 8px 24px -8px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
-                          }}
-                        >
-                          {isStarting ? "启动中..." : sessionId ? "刷新二维码" : "打开扫码"}
-                        </button>
-                      </>
-                    )}
-                  </div>
-                  {!loginReady && sessionId ? (
-                    <button
-                      onClick={closeLogin}
-                      className="mt-3 w-full h-10 rounded-xl bg-white/5 text-gray-300 font-semibold hover:bg-white/10 transition-colors border border-white/10 text-sm"
-                    >
-                      关闭本次扫码
-                    </button>
-                  ) : null}
-                </motion.div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
         </>
       )}
     </AnimatePresence>

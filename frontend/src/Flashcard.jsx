@@ -133,14 +133,36 @@ export default function Flashcard() {
     }, 400);
   };
 
-  const handleGenerate = async (url, xhsSessionId = "") => {
+  const handleGenerate = async (payload) => {
     setIsInputOpen(false);
     setIsLoading(true);
     try {
+      if (typeof payload === "string") {
+        payload = { type: "url", url: payload };
+      }
+      if (payload?.type === "image" && payload.file) {
+        const formData = new FormData();
+        formData.append("file", payload.file);
+        const res = await fetchWithTimeout(`${API_BASE}/cards/generate-image`, {
+          method: "POST",
+          body: formData,
+        }, 60000);
+        if (!res.ok) {
+          throw new Error("Failed to generate");
+        }
+        const data = await res.json();
+        setCard(data);
+        setCurrentView({ type: "home" });
+        toast.success("✨ 卡片生成成功！");
+        return;
+      }
+      const body = payload?.type === "text"
+        ? { text: payload.text }
+        : { url: payload?.url || "" };
       const res = await fetchWithTimeout(`${API_BASE}/cards/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, xhs_session_id: xhsSessionId || undefined }),
+        body: JSON.stringify(body),
       }, 60000);
       if (!res.ok) {
         throw new Error("Failed to generate");
