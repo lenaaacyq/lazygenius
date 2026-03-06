@@ -111,7 +111,7 @@ export default function CardView({
         }}
         onDragEnd={handleDragEnd}
         whileTap={{ scale: 0.98 }}
-        className="cursor-grab active:cursor-grabbing w-full max-w-md md:max-w-lg lg:max-w-xl"
+        className="cursor-grab active:cursor-grabbing w-full max-w-md"
       >
         <div
           className="bg-gradient-to-br from-gray-800/90 via-gray-800/95 to-gray-900 rounded-3xl overflow-hidden border border-white/10 relative backdrop-blur-xl"

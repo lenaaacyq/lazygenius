@@ -143,7 +143,7 @@ export default function InputPanel({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+            className="fixed md:absolute inset-0 bg-black/70 backdrop-blur-sm z-40"
           />
 
           {step === "select" ? (
@@ -152,7 +152,7 @@ export default function InputPanel({
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-t-3xl z-50 max-w-2xl mx-auto border-t border-white/10 backdrop-blur-xl"
+              className="fixed md:absolute bottom-0 left-0 right-0 bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-t-3xl z-50 max-w-2xl mx-auto border-t border-white/10 backdrop-blur-xl md:max-w-none"
               style={{
                 boxShadow: "0 -20px 60px -12px rgba(0, 0, 0, 0.8), 0 -8px 24px -8px rgba(168, 85, 247, 0.2)",
               }}
@@ -218,7 +218,7 @@ export default function InputPanel({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-t-3xl z-50 max-w-2xl mx-auto border-t border-white/10 backdrop-blur-xl"
+              className="fixed md:absolute bottom-0 left-0 right-0 bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-t-3xl z-50 max-w-2xl mx-auto border-t border-white/10 backdrop-blur-xl md:max-w-none"
               style={{
                 boxShadow: "0 -20px 60px -12px rgba(0, 0, 0, 0.8), 0 -8px 24px -8px rgba(168, 85, 247, 0.2)",
               }}

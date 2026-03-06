@@ -26,7 +26,7 @@ export default function CardDetail({ card, onBack }) {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen md:min-h-full">
       <div className="sticky top-0 bg-gray-950/80 backdrop-blur-lg border-b border-white/10 z-10">
         <div className="px-6 py-4 flex items-center gap-4">
           <button

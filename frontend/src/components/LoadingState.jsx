@@ -23,7 +23,7 @@ export default function LoadingState() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
+    <div className="flex flex-col items-center justify-center min-h-screen md:min-h-full px-6 py-12">
       <motion.div
         key={`stage-${stage}`}
         initial={{ opacity: 0, y: -10 }}

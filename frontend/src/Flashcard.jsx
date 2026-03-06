@@ -6,7 +6,6 @@ import InputPanel from "./components/InputPanel";
 import LoadingState from "./components/LoadingState";
 import AddLinkButton from "./components/AddLinkButton";
 import CardDetail from "./components/CardDetail";
-import BottomActions from "./components/BottomActions";
 
 const API_BASE = import.meta.env.VITE_API_BASE || (typeof window !== "undefined" && window.location.hostname !== "localhost"
   ? `http://${window.location.hostname}:8000`
@@ -181,8 +180,8 @@ export default function Flashcard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 relative overflow-hidden">
-        <div className="fixed inset-0 pointer-events-none opacity-[0.03]">
+      <div className="min-h-screen md:min-h-full bg-gray-950 relative overflow-hidden">
+        <div className="fixed md:absolute inset-0 pointer-events-none opacity-[0.03]">
           <div
             className="absolute inset-0"
             style={{
@@ -194,16 +193,16 @@ export default function Flashcard() {
             }}
           />
         </div>
-        <div className="fixed top-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="fixed bottom-0 right-0 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="fixed md:absolute top-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="fixed md:absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
         <LoadingState />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 relative overflow-hidden">
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03]">
+    <div className="min-h-screen md:min-h-full bg-gray-950 relative overflow-hidden">
+      <div className="fixed md:absolute inset-0 pointer-events-none opacity-[0.03]">
         <div
           className="absolute inset-0"
           style={{
@@ -215,12 +214,12 @@ export default function Flashcard() {
           }}
         />
       </div>
-      <div className="fixed top-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed bottom-0 right-0 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed md:absolute top-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed md:absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10">
         {currentView.type === "home" ? (
-          <div className="min-h-screen pb-8">
+          <div className="min-h-screen md:min-h-full pb-8">
             <Header mode={mode} onModeChange={setMode} />
 
             <div className="px-8 mb-4">
@@ -246,9 +245,6 @@ export default function Flashcard() {
                   onSwipeLeft={handleArchive}
                   onSwipeRight={handleSave}
                 />
-                <div className="hidden md:block">
-                  <BottomActions onSave={handleSave} onArchive={handleArchive} />
-                </div>
               </>
             ) : (
               <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
@@ -273,11 +269,11 @@ export default function Flashcard() {
       </div>
 
             <InputPanel
-        isOpen={isInputOpen}
-        onClose={() => setIsInputOpen(false)}
-        onGenerate={handleGenerate}
+              isOpen={isInputOpen}
+              onClose={() => setIsInputOpen(false)}
+              onGenerate={handleGenerate}
               apiBase={API_BASE}
-      />
+            />
     </div>
   );
 }
