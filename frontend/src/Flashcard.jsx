@@ -180,7 +180,7 @@ export default function Flashcard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen md:min-h-full bg-gray-950 relative overflow-hidden">
+      <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden">
         <div className="fixed md:absolute inset-0 pointer-events-none opacity-[0.03]">
           <div
             className="absolute inset-0"
@@ -201,7 +201,7 @@ export default function Flashcard() {
   }
 
   return (
-    <div className="min-h-screen md:min-h-full bg-gray-950 relative overflow-hidden">
+    <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden">
       <div className="fixed md:absolute inset-0 pointer-events-none opacity-[0.03]">
         <div
           className="absolute inset-0"
