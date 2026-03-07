@@ -21,6 +21,7 @@
 
 1. 复制并填写环境变量：
    - 从 [backend/.env.example](file:///Users/bytedance/Documents/lazygenius/backend/.env.example) 复制到 `backend/.env`
+   - 若开启接口保护，设置 `API_KEY` 与可选的 `API_KEY_HEADER`（默认 `x-api-key`）
 2. 安装依赖并启动：
 
 ```bash
@@ -39,6 +40,7 @@ python -m uvicorn main:app --host 0.0.0.0 --port 8001
 1. 复制并填写环境变量：
    - 从 [frontend/.env.example](file:///Users/bytedance/Documents/lazygenius/frontend/.env.example) 复制到 `frontend/.env.local`
    - `VITE_API_BASE` 指向后端，例如 `http://localhost:8001`
+   - 若后端启用 `API_KEY`，前端需配置 `VITE_API_KEY`（可选 `VITE_API_KEY_HEADER`）
 2. 启动：
 
 ```bash

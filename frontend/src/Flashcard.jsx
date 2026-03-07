@@ -11,6 +11,8 @@ const API_BASE = import.meta.env.VITE_API_BASE || (typeof window !== "undefined"
   ? `http://${window.location.hostname}:8000`
   : "http://localhost:8000");
 const ADMIN_KEY = import.meta.env.VITE_ADMIN_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY;
+const API_KEY_HEADER = import.meta.env.VITE_API_KEY_HEADER || "x-api-key";
 
 export default function Flashcard() {
   const [mode, setMode] = useState("mixed");
@@ -36,6 +38,7 @@ export default function Flashcard() {
       const headers = {
         ...(options.headers || {}),
         ...(isAdminPath && ADMIN_KEY ? { "x-admin-key": ADMIN_KEY } : {}),
+        ...(API_KEY ? { [API_KEY_HEADER]: API_KEY } : {}),
       };
       return await fetch(input, { ...options, headers, signal: controller.signal });
     } finally {
@@ -88,7 +91,7 @@ export default function Flashcard() {
     setEnterFrom("left");
     try {
       const isAdminPath = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
-      await fetch(`${API_BASE}/cards/${card.id}/review`, {
+      await fetchWithTimeout(`${API_BASE}/cards/${card.id}/review`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +117,7 @@ export default function Flashcard() {
     setEnterFrom("right");
     try {
       const isAdminPath = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
-      await fetch(`${API_BASE}/cards/${card.id}/review`, {
+      await fetchWithTimeout(`${API_BASE}/cards/${card.id}/review`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

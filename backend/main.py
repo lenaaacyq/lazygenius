@@ -10,6 +10,8 @@ from models import Base
 app = FastAPI()
 
 ADMIN_KEY = os.getenv("ADMIN_KEY")
+API_KEY = os.getenv("API_KEY")
+API_KEY_HEADER = os.getenv("API_KEY_HEADER", "x-api-key")
 
 class ApiKeyMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
@@ -20,6 +22,10 @@ class ApiKeyMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
         if path.startswith("/lark/webhook"):
             return await call_next(request)
+        if API_KEY:
+            provided_key = request.headers.get(API_KEY_HEADER)
+            if provided_key != API_KEY:
+                return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
         if path.startswith("/admin"):
             if not ADMIN_KEY:
                 return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
