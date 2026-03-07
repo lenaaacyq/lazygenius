@@ -20,6 +20,7 @@ export default function Flashcard() {
   const [card, setCard] = useState(null);
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isWarming, setIsWarming] = useState(false);
   const [currentView, setCurrentView] = useState({ type: "home" });
   const [error, setError] = useState(false);
   const [enterFrom, setEnterFrom] = useState(null);
@@ -71,7 +72,11 @@ export default function Flashcard() {
   }, [mode, fetchCard]);
 
   useEffect(() => {
-    prewarmBackend({ baseUrl: API_BASE });
+    prewarmBackend({
+      baseUrl: API_BASE,
+      onStart: () => setIsWarming(true),
+      onDone: () => setIsWarming(false),
+    });
   }, []);
 
   useEffect(() => {
@@ -186,7 +191,7 @@ export default function Flashcard() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isWarming) {
     return (
       <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden">
         <div className="fixed md:absolute inset-0 pointer-events-none opacity-[0.03]">

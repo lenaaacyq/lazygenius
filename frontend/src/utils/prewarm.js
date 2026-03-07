@@ -1,4 +1,11 @@
-export function prewarmBackend({ baseUrl, path = "/", timeoutMs = 6000, storageKey = "prewarm_backend" }) {
+export function prewarmBackend({
+  baseUrl,
+  path = "/",
+  timeoutMs = 6000,
+  storageKey = "prewarm_backend",
+  onStart,
+  onDone,
+}) {
   if (typeof window === "undefined") return;
   if (!baseUrl) return;
   try {
@@ -8,9 +15,14 @@ export function prewarmBackend({ baseUrl, path = "/", timeoutMs = 6000, storageK
   } catch {
     return;
   }
+  onStart?.();
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   const url = `${baseUrl.replace(/\/$/, "")}${path}`;
-  fetch(url, { method: "GET", mode: "cors", signal: controller.signal }).catch(() => {});
-  setTimeout(() => clearTimeout(timeoutId), timeoutMs + 50);
+  fetch(url, { method: "GET", mode: "cors", signal: controller.signal })
+    .catch(() => {})
+    .finally(() => {
+      clearTimeout(timeoutId);
+      onDone?.();
+    });
 }
