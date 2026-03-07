@@ -3,6 +3,7 @@ export function prewarmBackend({
   path = "/",
   timeoutMs = 6000,
   minDurationMs = 0,
+  showDelayMs = 0,
   storageKey = "prewarm_backend",
   onStart,
   onDone,
@@ -17,7 +18,17 @@ export function prewarmBackend({
     return;
   }
   const startedAt = Date.now();
-  onStart?.();
+  let startTimer = null;
+  let started = false;
+  if (showDelayMs > 0) {
+    startTimer = setTimeout(() => {
+      started = true;
+      onStart?.();
+    }, showDelayMs);
+  } else {
+    started = true;
+    onStart?.();
+  }
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   const url = `${baseUrl.replace(/\/$/, "")}${path}`;
@@ -25,6 +36,8 @@ export function prewarmBackend({
     .catch(() => {})
     .finally(() => {
       clearTimeout(timeoutId);
+      if (startTimer) clearTimeout(startTimer);
+      if (!started) return;
       const elapsed = Date.now() - startedAt;
       const remaining = Math.max(0, minDurationMs - elapsed);
       if (remaining > 0) {

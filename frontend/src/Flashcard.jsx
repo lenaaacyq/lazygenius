@@ -72,10 +72,13 @@ export default function Flashcard() {
   }, [mode, fetchCard]);
 
   useEffect(() => {
-    const minDurationMs = typeof window !== "undefined" && window.innerWidth < 768 ? 1400 : 800;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const minDurationMs = isMobile ? 1400 : 800;
+    const showDelayMs = isMobile ? 400 : 250;
     prewarmBackend({
       baseUrl: API_BASE,
       minDurationMs,
+      showDelayMs,
       onStart: () => setIsWarming(true),
       onDone: () => setIsWarming(false),
     });
