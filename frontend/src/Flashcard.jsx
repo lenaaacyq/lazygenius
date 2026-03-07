@@ -6,6 +6,7 @@ import InputPanel from "./components/InputPanel";
 import LoadingState from "./components/LoadingState";
 import AddLinkButton from "./components/AddLinkButton";
 import CardDetail from "./components/CardDetail";
+import { prewarmBackend } from "./utils/prewarm";
 
 const API_BASE = import.meta.env.VITE_API_BASE || (typeof window !== "undefined" && window.location.hostname !== "localhost"
   ? `http://${window.location.hostname}:8000`
@@ -68,6 +69,10 @@ export default function Flashcard() {
   useEffect(() => {
     fetchCard(mode);
   }, [mode, fetchCard]);
+
+  useEffect(() => {
+    prewarmBackend({ baseUrl: API_BASE });
+  }, []);
 
   useEffect(() => {
     if (card) {
