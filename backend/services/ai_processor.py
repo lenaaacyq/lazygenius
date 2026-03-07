@@ -26,8 +26,8 @@ key_prefix = API_KEY[:3] if API_KEY else ""
 DEFAULT_BASE_URL = "https://api.moonshot.cn/v1"
 raw_base_url = os.getenv("API_BASE_URL", DEFAULT_BASE_URL)
 _base_url_match = re.search(r"https?://[^\s'\"`]+", raw_base_url)
-BASE_URL = _base_url_match.group(0) if _base_url_match else DEFAULT_BASE_URL
-BASE_URL = BASE_URL.strip().strip("'\"").rstrip(",")
+BASE_URL = _base_url_match.group(0) if _base_url_match else raw_base_url
+BASE_URL = BASE_URL.strip().strip("`'\"").rstrip(",").rstrip("/")
 MODEL_NAME = os.getenv("MODEL_NAME", "moonshot-v1-8k")
 ACTIVE_PROVIDER = "kimi" if KIMI_API_KEY else ("openai" if OPENAI_API_KEY else "none")
 print(f"AI config: provider={ACTIVE_PROVIDER}, raw_base_url={raw_base_url!r}, base_url={BASE_URL!r}, model={MODEL_NAME}")

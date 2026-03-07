@@ -1,5 +1,6 @@
 import json
 import random
+import re
 from typing import Any, Optional, cast
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
@@ -201,7 +202,14 @@ async def generate_card_from_image(file: UploadFile = File(...), db: Session = D
 
 @router.post("/generate", response_model=FlashcardOut)
 def generate_card(payload: FlashcardGenerateInput, db: Session = Depends(get_db)):
-    url = (payload.url or "").strip()
+    url_raw = (payload.url or "").strip()
+    url = ""
+    if url_raw:
+        url_match = re.search(r"https?://[^\s'\"`<>]+", url_raw)
+        if url_match:
+            url = url_match.group(0)
+        else:
+            url = url_raw.strip("`'\"<>").split()[0]
     text = (payload.text or "").strip()
     auth_cookie = (payload.auth_cookie or "").strip()
     xhs_session_id = (payload.xhs_session_id or "").strip()
