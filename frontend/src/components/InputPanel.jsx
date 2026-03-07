@@ -66,7 +66,7 @@ export default function InputPanel({
         hoverBg: "hover:bg-gradient-to-br hover:from-amber-500/10 hover:to-orange-500/10",
         iconColor: "text-white",
         description: "上传图片提取信息",
-        helper: "支持截图、海报、图文等图片内容",
+        helper: "支持截图、海报、图文等图片内容，可直接粘贴截图",
       },
     ],
     []
@@ -85,6 +85,22 @@ export default function InputPanel({
     setText("");
     setImageFile(null);
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || selectedSource?.type !== "image") return;
+    const handlePaste = (event) => {
+      const items = event.clipboardData?.items;
+      if (!items) return;
+      const imageItem = Array.from(items).find((item) => item.type.startsWith("image/"));
+      if (!imageItem) return;
+      const file = imageItem.getAsFile();
+      if (!file) return;
+      setImageFile(file);
+      toast.success("已从剪贴板添加图片");
+    };
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [isOpen, selectedSource?.type]);
 
   const handleSelectSource = (sourceId) => {
     const source = sources.find((p) => p.id === sourceId) || null;

@@ -1,6 +1,7 @@
 import json
 import random
 import re
+import base64
 from typing import Any, Optional, cast
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
@@ -163,17 +164,22 @@ async def generate_card_from_image(file: UploadFile = File(...), db: Session = D
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Image file required")
     image_bytes = await file.read()
+    text = ""
+    ocr_error = None
     try:
         text = ocr.extract_text_from_image_bytes(image_bytes)
     except RuntimeError as e:
-        if str(e) == "tesseract_not_installed":
-            raise HTTPException(status_code=500, detail="OCR not available")
-        raise HTTPException(status_code=500, detail="OCR failed")
-    if not text:
-        raise HTTPException(status_code=400, detail="No text extracted from image")
+        ocr_error = str(e)
     source_excerpt = text[:150] + "..." if len(text) > 150 else text
-    flashcard = ai_processor.generate_flashcard_from_text(text)
+    flashcard = None
+    if text:
+        flashcard = ai_processor.generate_flashcard_from_text(text)
+    else:
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+        flashcard = ai_processor.generate_flashcard_from_image(image_base64)
     if not flashcard:
+        if ocr_error == "tesseract_not_installed":
+            raise HTTPException(status_code=500, detail="OCR not available")
         raise HTTPException(status_code=500, detail="Failed to generate flashcard")
     tags = normalize_list(flashcard.get("tags"))
     logic_breakdown = normalize_list(flashcard.get("logic_breakdown"))
