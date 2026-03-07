@@ -191,7 +191,18 @@ export default function Flashcard() {
     }
   };
 
-  if (isLoading || isWarming) {
+  if (isWarming) {
+    return (
+      <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden flex items-center justify-center px-6">
+        <div className="text-center max-w-sm">
+          <h2 className="text-lg font-semibold text-white mb-2">正在唤醒服务</h2>
+          <p className="text-sm text-gray-400">首次访问可能较慢，请稍候刷新或耐心等待。</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
     return (
       <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden">
         <div className="fixed md:absolute inset-0 pointer-events-none opacity-[0.03]">
