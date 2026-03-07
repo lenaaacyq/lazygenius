@@ -72,8 +72,10 @@ export default function Flashcard() {
   }, [mode, fetchCard]);
 
   useEffect(() => {
+    const minDurationMs = typeof window !== "undefined" && window.innerWidth < 768 ? 1400 : 800;
     prewarmBackend({
       baseUrl: API_BASE,
+      minDurationMs,
       onStart: () => setIsWarming(true),
       onDone: () => setIsWarming(false),
     });
@@ -195,7 +197,7 @@ export default function Flashcard() {
     return (
       <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden flex items-center justify-center px-6">
         <div className="text-center max-w-sm">
-          <h2 className="text-lg font-semibold text-white mb-2">正在唤醒服务</h2>
+          <h2 className="text-lg font-semibold text-white mb-2 pixel-font">正在唤醒服务～</h2>
           <p className="text-sm text-gray-400">首次访问可能较慢，请稍候刷新或耐心等待。</p>
         </div>
       </div>

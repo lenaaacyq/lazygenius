@@ -30,6 +30,10 @@ html, body, #root {
   display: none;
 }
 
+.pixel-font {
+  font-family: "VT323", Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+
 .clamp-2 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
