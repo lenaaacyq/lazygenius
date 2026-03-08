@@ -144,7 +144,12 @@ export default function CardView({
           )}
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-indigo-500/5 pointer-events-none" />
 
-          <div className="card-scroll max-h-[70vh] md:max-h-none overflow-y-auto">
+          <div
+            className="card-scroll max-h-[min(70vh,70vmin)] md:max-h-none overflow-y-auto"
+            onWheel={(event) => {
+              event.currentTarget.scrollTop += event.deltaY;
+            }}
+          >
             <div className="px-6 pt-6 pb-3 text-center">
               <p className="text-xs text-gray-500 font-medium">
                 {isPlaceholder ? "示例卡片 · 粘贴链接生成" : "← 左滑归档 · 右滑保留 →"}
