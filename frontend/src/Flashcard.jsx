@@ -16,15 +16,15 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const API_KEY_HEADER = import.meta.env.VITE_API_KEY_HEADER || "x-api-key";
 const LOCAL_PLACEHOLDER_CARD = {
   id: 0,
-  hook_title: "新用户示例卡：快速上手 3 步",
+  hook_title: "LazyGenius：让每次点击都成为有效积累",
   core_insight: "",
   logic_breakdown: [
-    "第一步，粘贴一个链接，让系统抓取内容并生成卡片。",
-    "第二步，向右滑保留，向左滑归档。",
+    "第一步，粘贴图/文/链接，系统抓取内容生成卡片。",
+    "第二步，右滑保留/左滑归档，个性化管理推送权重。",
     "第三步，点进详情查看原文并积累你的知识库。",
   ],
   actionable_takeaway: "",
-  golden_quote: "从一条链接开始，把零散信息变成可复用的知识卡。",
+  golden_quote: "从丢进一个链接开始，把世界的碎片，收纳成你的智库",
   xiaohongshu_copy: "",
   tags: [],
   visual_vibe: "Tech Minimalism: 深邃黑底色 + 荧光紫点缀",
