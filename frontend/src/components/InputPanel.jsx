@@ -39,7 +39,7 @@ export default function InputPanel({
         borderColor: "border-amber-500/30",
         hoverBg: "hover:bg-gradient-to-br hover:from-amber-500/10 hover:to-orange-500/10",
         iconColor: "text-white",
-        description: "上传图片提取信息",
+        description: "提炼图片精华信息",
         helper: "支持截图、海报、图文等图片内容，可直接粘贴截图",
       },
       {
@@ -84,6 +84,18 @@ export default function InputPanel({
     setUrl("");
     setText("");
     setImageFile(null);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -219,11 +231,9 @@ export default function InputPanel({
                   })}
                 </div>
 
-                <div className="mt-4 p-3 rounded-xl bg-white/5 border border-white/10">
-                  <p className="text-xs text-gray-500 text-center">
-                    选择类型后开始添加内容
-                  </p>
-                </div>
+                <p className="mt-4 text-xs text-gray-500 text-center">
+                  选择类型后开始添加内容
+                </p>
               </div>
             </motion.div>
           ) : null}

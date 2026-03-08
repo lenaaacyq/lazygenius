@@ -5,8 +5,8 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 py-6 md:px-8 md:py-10">
       <div className="relative w-full max-w-[480px]">
-        <div className="hidden md:block absolute inset-0 rounded-[48px] bg-black/60 border border-white/10 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.8)]" />
-        <div className="hidden md:block absolute top-3 left-1/2 -translate-x-1/2 w-28 h-6 rounded-full bg-black/80 border border-white/10" />
+        <div className="hidden md:block absolute inset-0 rounded-[48px] bg-white/6 border border-white/10 shadow-[0_16px_48px_-24px_rgba(0,0,0,0.6)]" />
+        <div className="hidden md:block absolute top-3 left-1/2 -translate-x-1/2 w-28 h-6 rounded-full bg-white/15 border border-white/20" />
         <div className="relative p-0 md:p-4">
           <div className="w-full md:h-[calc(100vh-120px)] md:rounded-[32px] md:overflow-hidden md:border md:border-white/10 md:shadow-2xl md:bg-gray-950">
             <Flashcard />
