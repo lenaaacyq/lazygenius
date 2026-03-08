@@ -8,7 +8,7 @@ function App() {
         <div className="hidden md:block absolute inset-0 rounded-[48px] bg-slate-200/20 border border-slate-200/60 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.8)]" />
         <div className="hidden md:block absolute top-3 left-1/2 -translate-x-1/2 w-28 h-6 rounded-full bg-slate-200/60 border border-slate-200/70" />
         <div className="relative p-0 md:p-3">
-          <div className="w-full md:h-[min(92vw,520px)] md:rounded-[32px] md:overflow-hidden md:border md:border-slate-200/50 md:shadow-2xl md:bg-gray-950">
+          <div className="w-full md:h-[min(90vh,760px)] md:rounded-[32px] md:overflow-hidden md:border md:border-slate-200/50 md:shadow-2xl md:bg-gray-950">
             <Flashcard />
           </div>
         </div>
