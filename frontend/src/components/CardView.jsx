@@ -156,7 +156,7 @@ export default function CardView({
               </p>
             </div>
             <div className="px-6 pt-3 pb-5">
-              <h2 className="text-[20px] font-bold text-white leading-snug tracking-tight clamp-1">
+              <h2 className="text-[20px] font-bold text-white leading-snug tracking-tight truncate">
                 {card?.hook_title}
               </h2>
             </div>
