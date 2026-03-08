@@ -31,7 +31,7 @@ export default function AddLinkButton({ onClick }) {
         />
         <LinkIcon className="w-5 h-5 text-white relative z-10 drop-shadow-lg" />
         <span className="text-base font-bold text-white relative z-10 drop-shadow-lg tracking-tight">
-          添加新链接
+          生成新卡片
         </span>
         <Zap className="w-4 h-4 text-yellow-300 relative z-10 drop-shadow-lg" />
       </div>

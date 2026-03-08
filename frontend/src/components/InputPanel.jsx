@@ -18,6 +18,31 @@ export default function InputPanel({
   const sources = useMemo(
     () => [
       {
+        id: "text",
+        type: "text",
+        name: "长文本",
+        icon: FileText,
+        iconBg: "bg-gradient-to-br from-emerald-500 to-teal-600",
+        borderColor: "border-emerald-500/30",
+        hoverBg: "hover:bg-gradient-to-br hover:from-emerald-500/10 hover:to-teal-500/10",
+        iconColor: "text-white",
+        description: "粘贴长文本生成卡片",
+        placeholder: "粘贴或输入长文本...",
+        helper: "适合长文章、会议纪要、学习笔记",
+      },
+      {
+        id: "image",
+        type: "image",
+        name: "图片",
+        icon: Image,
+        iconBg: "bg-gradient-to-br from-amber-500 to-orange-500",
+        borderColor: "border-amber-500/30",
+        hoverBg: "hover:bg-gradient-to-br hover:from-amber-500/10 hover:to-orange-500/10",
+        iconColor: "text-white",
+        description: "上传图片提取信息",
+        helper: "支持截图、海报、图文等图片内容，可直接粘贴截图",
+      },
+      {
         id: "github",
         type: "url",
         name: "GitHub",
@@ -42,31 +67,6 @@ export default function InputPanel({
         description: "支持一线前沿论文",
         placeholder: "粘贴 Archive 链接...",
         helper: "支持链接：GitHub、Archive 等公开网页",
-      },
-      {
-        id: "text",
-        type: "text",
-        name: "长文本",
-        icon: FileText,
-        iconBg: "bg-gradient-to-br from-emerald-500 to-teal-600",
-        borderColor: "border-emerald-500/30",
-        hoverBg: "hover:bg-gradient-to-br hover:from-emerald-500/10 hover:to-teal-500/10",
-        iconColor: "text-white",
-        description: "粘贴长文本生成卡片",
-        placeholder: "粘贴或输入长文本...",
-        helper: "适合长文章、会议纪要、学习笔记",
-      },
-      {
-        id: "image",
-        type: "image",
-        name: "图片",
-        icon: Image,
-        iconBg: "bg-gradient-to-br from-amber-500 to-orange-500",
-        borderColor: "border-amber-500/30",
-        hoverBg: "hover:bg-gradient-to-br hover:from-amber-500/10 hover:to-orange-500/10",
-        iconColor: "text-white",
-        description: "上传图片提取信息",
-        helper: "支持截图、海报、图文等图片内容，可直接粘贴截图",
       },
     ],
     []
@@ -178,7 +178,7 @@ export default function InputPanel({
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-purple-400" />
                     <h3 className="text-xl font-bold text-white tracking-tight">
-                      选择内容类型
+                      知识来源
                     </h3>
                   </div>
                   <button
@@ -219,8 +219,8 @@ export default function InputPanel({
                   })}
                 </div>
 
-                <div className="mt-4 p-3 rounded-xl bg-purple-500/10 border border-purple-500/30">
-                  <p className="text-xs text-purple-300 text-center">
+                <div className="mt-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                  <p className="text-xs text-gray-500 text-center">
                     选择类型后开始添加内容
                   </p>
                 </div>
