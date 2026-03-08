@@ -16,7 +16,7 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const API_KEY_HEADER = import.meta.env.VITE_API_KEY_HEADER || "x-api-key";
 const LOCAL_PLACEHOLDER_CARD = {
   id: 0,
-  hook_title: "LazyGenius：让每次点击都成为有效积累",
+  hook_title: "LazyGenius：轻轻一点，有效积累。",
   core_insight: "",
   logic_breakdown: [
     "第一步，粘贴图/文/链接，系统抓取内容生成卡片。",
