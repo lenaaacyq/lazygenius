@@ -14,10 +14,33 @@ const API_BASE = import.meta.env.VITE_API_BASE || (typeof window !== "undefined"
 const ADMIN_KEY = import.meta.env.VITE_ADMIN_KEY;
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_KEY_HEADER = import.meta.env.VITE_API_KEY_HEADER || "x-api-key";
+const LOCAL_PLACEHOLDER_CARD = {
+  id: 0,
+  hook_title: "新用户示例卡：快速上手 3 步",
+  core_insight: "",
+  logic_breakdown: [
+    "第一步，粘贴一个链接，让系统抓取内容并生成卡片。",
+    "第二步，向右滑保留，向左滑归档。",
+    "第三步，点进详情查看原文并积累你的知识库。",
+  ],
+  actionable_takeaway: "",
+  golden_quote: "从一条链接开始，把零散信息变成可复用的知识卡。",
+  xiaohongshu_copy: "",
+  tags: [],
+  visual_vibe: "Tech Minimalism: 深邃黑底色 + 荧光紫点缀",
+  content_type: "",
+  information_extraction: [],
+  ocr_text: "",
+  source_excerpt: "这是一个示例卡片，用于新用户首次进入时的占位展示。",
+  source_url: "",
+  status: "placeholder",
+  weight: 0,
+  created_at: null,
+};
 
 export default function Flashcard() {
   const [mode, setMode] = useState("mixed");
-  const [card, setCard] = useState(null);
+  const [card, setCard] = useState(LOCAL_PLACEHOLDER_CARD);
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isWarming, setIsWarming] = useState(false);
@@ -54,7 +77,6 @@ export default function Flashcard() {
       const strategy = resolveStrategy(nextMode);
       const res = await fetchWithTimeout(`${API_BASE}/cards/next?strategy=${strategy}`);
       if (!res.ok) {
-        setCard(null);
         if (res.status !== 404) setError(true);
         return;
       }
