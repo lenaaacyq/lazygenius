@@ -81,6 +81,7 @@ export default function Flashcard() {
         return;
       }
       const data = await res.json();
+      if (data?.status === "placeholder") return;
       setCard(data);
     } catch (e) {
       console.error("Failed to fetch card:", e);
