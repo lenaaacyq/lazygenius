@@ -271,7 +271,7 @@ export default function Flashcard() {
 
       <div className="relative z-10">
         {currentView.type === "home" ? (
-          <div className="min-h-screen md:min-h-full pb-8">
+          <div className="min-h-screen md:min-h-full pb-6 flex flex-col">
             <Header mode={mode} onModeChange={setMode} />
 
             <div className="px-8 mb-4">
@@ -282,21 +282,23 @@ export default function Flashcard() {
 
             {card ? (
               <>
-                <CardView
-                  key={card.id}
-                  card={card}
-                  enterFrom={enterFrom}
-                  isPlaceholder={isPlaceholder}
-                  onCardClick={() => {
-                    if (isPlaceholder) {
-                      toast("示例卡片不可查看详情，请先生成内容");
-                      return;
-                    }
-                    navigate("/detail");
-                  }}
-                  onSwipeLeft={handleArchive}
-                  onSwipeRight={handleSave}
-                />
+                <div className="flex-1 flex items-stretch">
+                  <CardView
+                    key={card.id}
+                    card={card}
+                    enterFrom={enterFrom}
+                    isPlaceholder={isPlaceholder}
+                    onCardClick={() => {
+                      if (isPlaceholder) {
+                        toast("示例卡片不可查看详情，请先生成内容");
+                        return;
+                      }
+                      navigate("/detail");
+                    }}
+                    onSwipeLeft={handleArchive}
+                    onSwipeRight={handleSave}
+                  />
+                </div>
               </>
             ) : (
               <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">

@@ -63,12 +63,12 @@ export default function CardView({
       : { x: 0, opacity: 1, scale: 1 };
 
   return (
-    <div className="flex flex-col items-center justify-center px-8 py-1">
+    <div className="flex flex-col items-center justify-center px-8 py-2 w-full flex-1">
       <motion.div
         initial={enterInitial}
         animate={{ x: 0, opacity: 1, scale: 1 }}
         transition={{ duration: 0.35, ease: "easeOut" }}
-        className="w-full flex justify-center"
+        className="w-full flex-1 flex justify-center"
       >
       <motion.div
         drag={swipeDirection || isPlaceholder ? false : "x"}
@@ -111,10 +111,10 @@ export default function CardView({
         }}
         onDragEnd={handleDragEnd}
         whileTap={{ scale: 0.98 }}
-        className="cursor-grab active:cursor-grabbing w-full max-w-md"
+        className="cursor-grab active:cursor-grabbing w-full max-w-md h-full"
       >
         <div
-          className="bg-gradient-to-br from-gray-800/90 via-gray-800/95 to-gray-900 rounded-3xl overflow-hidden border border-white/10 relative backdrop-blur-xl"
+          className="bg-gradient-to-br from-gray-800/90 via-gray-800/95 to-gray-900 rounded-3xl overflow-hidden border border-white/10 relative backdrop-blur-xl h-full flex flex-col"
           style={{
             boxShadow: "0 20px 60px -12px rgba(0, 0, 0, 0.8), 0 8px 24px -8px rgba(168, 85, 247, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
           }}
@@ -145,7 +145,7 @@ export default function CardView({
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-indigo-500/5 pointer-events-none" />
 
           <div
-            className="card-scroll max-h-[min(70vh,70vmin)] md:max-h-none overflow-y-auto"
+            className="card-scroll flex-1 overflow-y-auto"
             onWheel={(event) => {
               event.currentTarget.scrollTop += event.deltaY;
             }}
