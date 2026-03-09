@@ -3,14 +3,8 @@ import { Toaster } from 'sonner'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4 py-6 md:px-8 md:py-10">
-      <div className="relative w-full max-w-[480px]">
-        <div className="relative p-0 md:p-4">
-          <div className="w-full md:h-[calc(100vh-120px)] md:rounded-[32px] md:overflow-hidden md:shadow-2xl md:bg-gray-950">
-            <Flashcard />
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-950">
+      <Flashcard />
       <Toaster
         position="top-center"
         toastOptions={{
