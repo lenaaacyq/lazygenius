@@ -43,7 +43,6 @@ export default function Flashcard() {
   const [card, setCard] = useState(LOCAL_PLACEHOLDER_CARD);
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isWarming, setIsWarming] = useState(false);
   const [currentView, setCurrentView] = useState({ type: "home" });
   const [error, setError] = useState(false);
   const [enterFrom, setEnterFrom] = useState(null);
@@ -102,8 +101,6 @@ export default function Flashcard() {
       baseUrl: API_BASE,
       minDurationMs,
       showDelayMs,
-      onStart: () => setIsWarming(true),
-      onDone: () => setIsWarming(false),
     });
   }, []);
 
@@ -219,17 +216,6 @@ export default function Flashcard() {
     }
   };
 
-  if (isWarming) {
-    return (
-      <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden flex items-center justify-center px-6">
-        <div className="text-center max-w-sm">
-          <h2 className="text-lg font-semibold text-white mb-2 pixel-font">正在唤醒服务～</h2>
-          <p className="text-sm text-gray-400">首次访问可能较慢，请稍候刷新或耐心等待。</p>
-        </div>
-      </div>
-    );
-  }
-
   if (isLoading) {
     return (
       <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden">
@@ -269,20 +255,20 @@ export default function Flashcard() {
       <div className="fixed md:absolute top-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
       <div className="fixed md:absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative z-10">
+      <div className="relative z-10 min-h-screen md:min-h-full md:h-full flex items-center justify-center">
         {currentView.type === "home" ? (
-          <div className="min-h-screen md:min-h-full pb-6 flex flex-col">
-            <Header mode={mode} onModeChange={setMode} />
+          <div className="w-full min-h-screen md:min-h-0 md:w-[420px] md:h-[min(92vh,860px)] md:rounded-[34px] md:border md:border-white/10 md:bg-gradient-to-b md:from-gray-900/90 md:to-gray-950/95 md:shadow-[0_30px_90px_-26px_rgba(0,0,0,0.85)] md:backdrop-blur-xl overflow-hidden flex flex-col">
+            <div className="flex-1 flex flex-col min-h-0 pb-6">
+              <Header mode={mode} onModeChange={setMode} />
 
-            <div className="px-8 mb-4">
-              <div className="max-w-md mx-auto">
-                <AddLinkButton onClick={() => setIsInputOpen(true)} />
+              <div className="px-8 mb-4">
+                <div className="max-w-md mx-auto">
+                  <AddLinkButton onClick={() => setIsInputOpen(true)} />
+                </div>
               </div>
-            </div>
 
-            {card ? (
-              <>
-                <div className="flex-1 flex items-stretch">
+              {card ? (
+                <div className="flex-1 min-h-0 flex items-center">
                   <CardView
                     key={card.id}
                     card={card}
@@ -299,26 +285,28 @@ export default function Flashcard() {
                     onSwipeRight={handleSave}
                   />
                 </div>
-              </>
-            ) : (
-              <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
-                <p className="text-lg text-gray-400 mb-2 font-medium">
-                  {error ? "加载失败，请重试" : "没有更多卡片了"}
-                </p>
-                <p className="text-sm text-gray-500 mb-6">
-                  {error ? "网络或服务暂时不可用" : "粘贴链接即可生成新卡片"}
-                </p>
-                <button
-                  onClick={() => fetchCard(mode)}
-                  className="px-6 py-3 rounded-xl bg-white/5 text-gray-200 font-semibold border border-white/10 hover:bg-white/10 transition-colors"
-                >
-                  刷新
-                </button>
-              </div>
-            )}
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
+                  <p className="text-lg text-gray-400 mb-2 font-medium">
+                    {error ? "加载失败，请重试" : "没有更多卡片了"}
+                  </p>
+                  <p className="text-sm text-gray-500 mb-6">
+                    {error ? "网络或服务暂时不可用" : "粘贴链接即可生成新卡片"}
+                  </p>
+                  <button
+                    onClick={() => fetchCard(mode)}
+                    className="px-6 py-3 rounded-xl bg-white/5 text-gray-200 font-semibold border border-white/10 hover:bg-white/10 transition-colors"
+                  >
+                    刷新
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
-          <CardDetail card={card} onBack={() => navigate("/")} />
+          <div className="w-full min-h-screen md:min-h-0 md:w-[420px] md:h-[min(92vh,860px)] md:rounded-[34px] md:border md:border-white/10 md:bg-gradient-to-b md:from-gray-900/90 md:to-gray-950/95 md:shadow-[0_30px_90px_-26px_rgba(0,0,0,0.85)] md:backdrop-blur-xl overflow-y-auto">
+            <CardDetail card={card} onBack={() => navigate("/")} />
+          </div>
         )}
       </div>
 
