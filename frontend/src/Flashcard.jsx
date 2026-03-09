@@ -216,7 +216,7 @@ export default function Flashcard() {
     }
   };
 
-  const shellClassName = "w-full min-h-screen md:min-h-0 md:w-[420px] md:h-[min(88vh,860px)] md:rounded-[34px] md:border md:border-white/10 md:bg-gradient-to-b md:from-gray-900/90 md:to-gray-950/95 md:shadow-[0_30px_90px_-26px_rgba(0,0,0,0.85)] md:backdrop-blur-xl overflow-hidden flex flex-col relative";
+  const shellClassName = "w-full min-h-screen md:min-h-0 md:w-[420px] md:h-[min(86vh,840px)] md:rounded-[34px] md:border md:border-white/10 md:bg-gradient-to-b md:from-gray-900/90 md:to-gray-950/95 md:shadow-[0_30px_90px_-26px_rgba(0,0,0,0.85)] md:backdrop-blur-xl overflow-hidden flex flex-col relative";
 
   if (isLoading) {
     return (
@@ -260,7 +260,7 @@ export default function Flashcard() {
       <div className="relative z-10 h-full flex items-center justify-center py-0 md:py-6">
         {currentView.type === "home" ? (
           <div className={shellClassName}>
-            <div className="flex-1 flex flex-col min-h-0 pb-6">
+            <div className="flex-1 flex flex-col min-h-0 pb-3">
               <Header mode={mode} onModeChange={setMode} />
 
               <div className="px-8">
@@ -270,7 +270,7 @@ export default function Flashcard() {
               </div>
 
               {card ? (
-                <div className="flex-1 min-h-0 flex items-start pt-4">
+                <div className="flex-1 min-h-0 flex items-start pt-6">
                   <CardView
                     key={card.id}
                     card={card}

@@ -9,7 +9,7 @@ export default function Header({ mode, onModeChange }) {
   ];
 
   return (
-    <header className="px-6 pt-6 pb-4">
+    <header className="px-6 pt-6 pb-6">
       <div className="max-w-md mx-auto">
         <div className="flex items-center gap-3 mb-5">
           <BrandLogo size="md" />
