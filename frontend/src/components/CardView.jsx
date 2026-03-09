@@ -65,7 +65,7 @@ export default function CardView({
       : { x: 0, opacity: 1, scale: 1 };
 
   return (
-    <div className="flex flex-col items-center justify-center px-8 py-0 w-full flex-1">
+    <div className="flex flex-col items-center justify-start px-8 py-0 w-full flex-1">
       <motion.div
         initial={enterInitial}
         animate={{ x: 0, opacity: 1, scale: 1 }}
