@@ -45,6 +45,8 @@ export default function CardView({
   const keyPoints = Array.isArray(card?.logic_breakdown)
     ? card.logic_breakdown.map((point) => normalizePoint(point)).slice(0, 3)
     : [];
+  const title = card?.hook_title || "";
+  const titleClassName = title.length > 18 ? "text-[17px]" : "text-[20px]";
 
   useEffect(() => {
     setSwipeDirection(null);
@@ -63,7 +65,7 @@ export default function CardView({
       : { x: 0, opacity: 1, scale: 1 };
 
   return (
-    <div className="flex flex-col items-center justify-center px-8 py-2 w-full flex-1">
+    <div className="flex flex-col items-center justify-center px-8 py-0 w-full flex-1">
       <motion.div
         initial={enterInitial}
         animate={{ x: 0, opacity: 1, scale: 1 }}
@@ -156,8 +158,11 @@ export default function CardView({
               </p>
             </div>
             <div className="px-6 pt-3 pb-5">
-              <h2 className="text-[20px] font-bold text-white leading-snug tracking-tight truncate">
-                {card?.hook_title}
+              <h2
+                className={`${titleClassName} font-bold text-white leading-snug tracking-tight whitespace-nowrap`}
+                title={title}
+              >
+                {title}
               </h2>
             </div>
 

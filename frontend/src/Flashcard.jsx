@@ -216,6 +216,8 @@ export default function Flashcard() {
     }
   };
 
+  const shellClassName = "w-full min-h-screen md:min-h-0 md:w-[420px] md:h-[min(88vh,860px)] md:rounded-[34px] md:border md:border-white/10 md:bg-gradient-to-b md:from-gray-900/90 md:to-gray-950/95 md:shadow-[0_30px_90px_-26px_rgba(0,0,0,0.85)] md:backdrop-blur-xl overflow-hidden flex flex-col relative";
+
   if (isLoading) {
     return (
       <div className="min-h-screen md:min-h-full md:h-full md:overflow-y-auto bg-gray-950 relative overflow-hidden">
@@ -239,7 +241,7 @@ export default function Flashcard() {
   }
 
   return (
-    <div className={`min-h-screen md:min-h-full md:h-full bg-gray-950 relative overflow-hidden ${isInputOpen ? "md:overflow-hidden" : "md:overflow-y-auto"}`}>
+    <div className={`h-screen bg-gray-950 relative overflow-hidden ${isInputOpen ? "md:overflow-hidden" : "md:overflow-y-auto"}`}>
       <div className="fixed md:absolute inset-0 pointer-events-none opacity-[0.03]">
         <div
           className="absolute inset-0"
@@ -255,20 +257,20 @@ export default function Flashcard() {
       <div className="fixed md:absolute top-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
       <div className="fixed md:absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 min-h-screen md:min-h-full md:h-full flex items-center justify-center">
+      <div className="relative z-10 h-full flex items-center justify-center py-0 md:py-6">
         {currentView.type === "home" ? (
-          <div className="w-full min-h-screen md:min-h-0 md:w-[420px] md:h-[min(92vh,860px)] md:rounded-[34px] md:border md:border-white/10 md:bg-gradient-to-b md:from-gray-900/90 md:to-gray-950/95 md:shadow-[0_30px_90px_-26px_rgba(0,0,0,0.85)] md:backdrop-blur-xl overflow-hidden flex flex-col">
+          <div className={shellClassName}>
             <div className="flex-1 flex flex-col min-h-0 pb-6">
               <Header mode={mode} onModeChange={setMode} />
 
-              <div className="px-8 mb-4">
+              <div className="px-8">
                 <div className="max-w-md mx-auto">
                   <AddLinkButton onClick={() => setIsInputOpen(true)} />
                 </div>
               </div>
 
               {card ? (
-                <div className="flex-1 min-h-0 flex items-center">
+                <div className="flex-1 min-h-0 flex items-center pt-4">
                   <CardView
                     key={card.id}
                     card={card}
@@ -302,13 +304,6 @@ export default function Flashcard() {
                 </div>
               )}
             </div>
-          </div>
-        ) : (
-          <div className="w-full min-h-screen md:min-h-0 md:w-[420px] md:h-[min(92vh,860px)] md:rounded-[34px] md:border md:border-white/10 md:bg-gradient-to-b md:from-gray-900/90 md:to-gray-950/95 md:shadow-[0_30px_90px_-26px_rgba(0,0,0,0.85)] md:backdrop-blur-xl overflow-y-auto">
-            <CardDetail card={card} onBack={() => navigate("/")} />
-          </div>
-        )}
-      </div>
 
             <InputPanel
               isOpen={isInputOpen}
@@ -316,6 +311,13 @@ export default function Flashcard() {
               onGenerate={handleGenerate}
               apiBase={API_BASE}
             />
+          </div>
+        ) : (
+          <div className={`${shellClassName} overflow-y-auto`}>
+            <CardDetail card={card} onBack={() => navigate("/")} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
