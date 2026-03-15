@@ -226,15 +226,15 @@ export default function Flashcard() {
             className="absolute inset-0"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+                linear-gradient(rgba(16, 185, 129, 0.28) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.28) 1px, transparent 1px)
               `,
               backgroundSize: "60px 60px",
             }}
           />
         </div>
-        <div className="fixed md:absolute top-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="fixed md:absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="fixed md:absolute top-0 left-0 w-96 h-96 bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="fixed md:absolute bottom-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
         <LoadingState />
       </div>
     );
@@ -247,15 +247,15 @@ export default function Flashcard() {
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+              linear-gradient(rgba(16, 185, 129, 0.28) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(16, 185, 129, 0.28) 1px, transparent 1px)
             `,
             backgroundSize: "60px 60px",
           }}
         />
       </div>
-      <div className="fixed md:absolute top-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="fixed md:absolute bottom-0 right-0 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed md:absolute top-0 left-0 w-96 h-96 bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="fixed md:absolute bottom-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 h-full flex items-center justify-center py-0 md:py-6">
         {currentView.type === "home" ? (

@@ -7,12 +7,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5',
+        default: 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5',
         destructive: 'bg-red-500/20 text-red-400 border-2 border-red-500/50 hover:bg-red-500/40 hover:shadow-[0_0_30px_rgba(239,68,68,0.4)]',
         success: 'bg-green-500/20 text-green-400 border-2 border-green-500/50 hover:bg-green-500/40 hover:shadow-[0_0_30px_rgba(34,197,94,0.4)]',
         outline: 'border border-white/20 bg-white/5 text-white/70 backdrop-blur-sm hover:bg-white/10 hover:text-white',
         ghost: 'bg-white/10 text-white/70 backdrop-blur-sm hover:bg-white/20 hover:text-white',
-        activeGhost: 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/40',
+        activeGhost: 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/40',
       },
       size: {
         default: 'h-10 px-4 py-2',

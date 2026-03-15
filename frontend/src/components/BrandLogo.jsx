@@ -11,7 +11,7 @@ export default function BrandLogo({ size = "md" }) {
   return (
     <div className={`${sizes[size].container} relative`}>
       <motion.div
-        className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-500"
+        className="absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500"
         animate={{
           rotate: [0, 360],
         }}
@@ -22,10 +22,10 @@ export default function BrandLogo({ size = "md" }) {
         }}
       />
       <div className="absolute inset-0.5 rounded-2xl bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
-        <Sparkles className={`${sizes[size].sparkle} text-purple-400`} />
+        <Sparkles className={`${sizes[size].sparkle} text-emerald-300`} />
       </div>
       <motion.div
-        className="absolute inset-0 rounded-2xl bg-purple-500/30 blur-xl"
+        className="absolute inset-0 rounded-2xl bg-emerald-500/30 blur-xl"
         animate={{
           opacity: [0.3, 0.6, 0.3],
         }}

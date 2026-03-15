@@ -118,11 +118,11 @@ export default function CardView({
         <div
           className="bg-gradient-to-br from-gray-800/90 via-gray-800/95 to-gray-900 rounded-3xl overflow-hidden border border-white/10 relative backdrop-blur-xl h-full flex flex-col"
           style={{
-            boxShadow: "0 20px 60px -12px rgba(0, 0, 0, 0.8), 0 8px 24px -8px rgba(168, 85, 247, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+            boxShadow: "0 20px 60px -12px rgba(0, 0, 0, 0.8), 0 8px 24px -8px rgba(16, 185, 129, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
           }}
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-purple-500/30 via-green-500/20 to-emerald-500/30 pointer-events-none rounded-3xl"
+            className="absolute inset-0 bg-gradient-to-br from-emerald-500/30 via-amber-500/15 to-teal-500/30 pointer-events-none rounded-3xl"
             style={{
               opacity: swipeDirection === "right" ? 1 : saveGlowOpacity,
             }}
@@ -140,11 +140,11 @@ export default function CardView({
               animate={{ opacity: [0.3, 1, 0] }}
               transition={{ duration: 0.4 }}
               style={{
-                background: "radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.6), rgba(99, 102, 241, 0.3), transparent 70%)",
+                background: "radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.6), rgba(20, 184, 166, 0.3), transparent 70%)",
               }}
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-indigo-500/5 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-amber-500/10 pointer-events-none" />
 
           <div
             className="card-scroll flex-1 overflow-y-auto"
@@ -175,7 +175,7 @@ export default function CardView({
                     boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05)",
                   }}
                 >
-                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mt-0.5 shadow-lg shadow-purple-500/30">
+                  <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mt-0.5 shadow-lg shadow-emerald-500/30">
                     <div className="w-1.5 h-1.5 rounded-full bg-white" />
                   </div>
                   <p className="flex-1 text-gray-200 leading-relaxed font-medium text-[13px] clamp-3">

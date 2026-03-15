@@ -31,7 +31,7 @@ export default function LoadingState() {
         className="mb-8"
       >
         <div className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
-          <p className="text-sm text-purple-400 font-bold tracking-wide">
+          <p className="text-sm text-emerald-300 font-bold tracking-wide">
             {stage === 0 && "构建标题..."}
             {stage === 1 && "提取要点..."}
             {stage === 2 && "生成金句..."}
@@ -42,12 +42,12 @@ export default function LoadingState() {
 
       <div className="relative w-[340px] h-[440px] mb-12 mt-4">
         <motion.div
-          className="absolute inset-8 rounded-3xl border-2 border-purple-500/40"
+          className="absolute inset-8 rounded-3xl border-2 border-emerald-500/40"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
           style={{
-            boxShadow: "0 0 40px rgba(168, 85, 247, 0.3)",
+            boxShadow: "0 0 40px rgba(16, 185, 129, 0.28)",
           }}
         />
 
@@ -62,19 +62,19 @@ export default function LoadingState() {
           transition={{ type: "spring", damping: 12, stiffness: 200 }}
         >
           <div
-            className="w-full h-full rounded-xl bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-500/50 flex items-center justify-center backdrop-blur-sm"
+            className="w-full h-full rounded-xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/50 flex items-center justify-center backdrop-blur-sm"
             style={{
-              boxShadow: "0 4px 16px rgba(168, 85, 247, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+              boxShadow: "0 4px 16px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
             }}
           >
             <div className="flex gap-2">
               <motion.div
-                className="w-3 h-3 rounded-full bg-purple-400"
+                className="w-3 h-3 rounded-full bg-emerald-400"
                 animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 1, repeat: Infinity }}
               />
               <motion.div
-                className="w-16 h-3 rounded-full bg-purple-400/60"
+                className="w-16 h-3 rounded-full bg-emerald-400/60"
                 animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 1, repeat: Infinity, delay: 0.1 }}
               />
@@ -106,7 +106,7 @@ export default function LoadingState() {
                 boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05)",
               }}
             >
-              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/30">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-teal-500/30">
                 <Circle className="w-3 h-3 text-white fill-white" />
               </div>
               <div className="flex-1 h-2 rounded-full bg-blue-400/40" />
@@ -150,13 +150,13 @@ export default function LoadingState() {
             ease: "easeInOut",
           }}
         >
-          <div className="w-48 h-48 rounded-full bg-purple-500/20 blur-3xl" />
+          <div className="w-48 h-48 rounded-full bg-emerald-500/20 blur-3xl" />
         </motion.div>
       </div>
 
       <div className="w-80 h-1.5 bg-white/10 rounded-full overflow-hidden mb-6">
         <motion.div
-          className="h-full bg-gradient-to-r from-purple-500 to-indigo-600"
+          className="h-full bg-gradient-to-r from-emerald-500 to-teal-600"
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
           transition={{

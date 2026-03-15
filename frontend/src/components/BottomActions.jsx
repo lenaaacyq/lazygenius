@@ -23,9 +23,9 @@ export default function BottomActions({ onSave, onArchive }) {
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={onSave}
-          className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-purple-500 via-indigo-600 to-purple-700 text-white font-semibold flex items-center justify-center gap-2 border border-white/20"
+          className="flex-1 h-12 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-700 text-white font-semibold flex items-center justify-center gap-2 border border-white/20"
           style={{
-            boxShadow: "0 12px 32px -8px rgba(168, 85, 247, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.2), inset 0 -2px 0 rgba(0, 0, 0, 0.2)",
+            boxShadow: "0 12px 32px -8px rgba(16, 185, 129, 0.45), inset 0 2px 0 rgba(255, 255, 255, 0.2), inset 0 -2px 0 rgba(0, 0, 0, 0.2)",
           }}
         >
           <Heart className="w-4 h-4" />

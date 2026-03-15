@@ -182,13 +182,13 @@ export default function InputPanel({
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               className="absolute bottom-0 left-0 right-0 bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-t-3xl z-50 border-t border-white/10 backdrop-blur-xl"
               style={{
-                boxShadow: "0 -20px 60px -12px rgba(0, 0, 0, 0.8), 0 -8px 24px -8px rgba(168, 85, 247, 0.2)",
+                boxShadow: "0 -20px 60px -12px rgba(0, 0, 0, 0.8), 0 -8px 24px -8px rgba(16, 185, 129, 0.2)",
               }}
             >
               <div className="px-6 pt-6 pb-8">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-purple-400" />
+                    <Sparkles className="w-5 h-5 text-emerald-300" />
                     <h3 className="text-xl font-bold text-white tracking-tight">
                       知识来源
                     </h3>
@@ -246,7 +246,7 @@ export default function InputPanel({
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
               className="absolute bottom-0 left-0 right-0 bg-gradient-to-br from-gray-800 via-gray-800 to-gray-900 rounded-t-3xl z-50 border-t border-white/10 backdrop-blur-xl"
               style={{
-                boxShadow: "0 -20px 60px -12px rgba(0, 0, 0, 0.8), 0 -8px 24px -8px rgba(168, 85, 247, 0.2)",
+                boxShadow: "0 -20px 60px -12px rgba(0, 0, 0, 0.8), 0 -8px 24px -8px rgba(16, 185, 129, 0.2)",
               }}
             >
               <div className="px-6 pt-6 pb-8">
@@ -278,7 +278,7 @@ export default function InputPanel({
                       onChange={(e) => setUrl(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
                       placeholder={selectedSource.placeholder}
-                      className="w-full h-14 pl-12 pr-4 rounded-2xl bg-black/40 backdrop-blur-xl border-2 border-white/10 focus:border-purple-500 focus:bg-black/60 outline-none transition-all text-white placeholder:text-gray-500 font-medium"
+                      className="w-full h-14 pl-12 pr-4 rounded-2xl bg-black/40 backdrop-blur-xl border-2 border-white/10 focus:border-emerald-500 focus:bg-black/60 outline-none transition-all text-white placeholder:text-gray-500 font-medium"
                       style={{
                         boxShadow: "inset 0 2px 8px rgba(0, 0, 0, 0.3)",
                       }}
@@ -294,7 +294,7 @@ export default function InputPanel({
                       onChange={(e) => setText(e.target.value)}
                       placeholder={selectedSource.placeholder}
                       rows={6}
-                      className="w-full rounded-2xl bg-black/40 backdrop-blur-xl border-2 border-white/10 focus:border-purple-500 focus:bg-black/60 outline-none transition-all text-white placeholder:text-gray-500 font-medium p-4 resize-none"
+                      className="w-full rounded-2xl bg-black/40 backdrop-blur-xl border-2 border-white/10 focus:border-emerald-500 focus:bg-black/60 outline-none transition-all text-white placeholder:text-gray-500 font-medium p-4 resize-none"
                       autoFocus
                     />
                   </div>
@@ -302,7 +302,7 @@ export default function InputPanel({
 
                 {selectedSource.type === "image" ? (
                   <div className="mb-2">
-                    <label className="w-full h-32 rounded-2xl border-2 border-dashed border-white/15 bg-black/30 flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-purple-500/50 hover:text-gray-200 transition-colors cursor-pointer">
+                    <label className="w-full h-32 rounded-2xl border-2 border-dashed border-white/15 bg-black/30 flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-emerald-500/50 hover:text-gray-200 transition-colors cursor-pointer">
                       <Image className="w-6 h-6" />
                       <span className="text-sm font-medium">{imageFile ? imageFile.name : "点击选择图片"}</span>
                       <input
@@ -336,9 +336,9 @@ export default function InputPanel({
                       || (selectedSource.type === "text" && !text.trim())
                       || (selectedSource.type === "image" && !imageFile)
                     }
-                    className="flex-1 h-12 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-purple-500/50 transition-all border border-white/20"
+                    className="flex-1 h-12 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-emerald-500/50 transition-all border border-white/20"
                     style={{
-                      boxShadow: "0 8px 24px -8px rgba(168, 85, 247, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                      boxShadow: "0 8px 24px -8px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                     }}
                   >
                     生成卡片

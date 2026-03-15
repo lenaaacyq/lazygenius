@@ -28,10 +28,10 @@ export default function Header({ mode, onModeChange }) {
               {mode === m.key && (
                 <motion.div
                   layoutId="mode-indicator"
-                  className="absolute inset-0 bg-gradient-to-br from-purple-500 via-indigo-600 to-purple-700 rounded-xl shadow-lg shadow-purple-500/50"
+                  className="absolute inset-0 bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-700 rounded-xl shadow-lg shadow-emerald-500/40"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   style={{
-                    boxShadow: "0 8px 24px -4px rgba(168, 85, 247, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                    boxShadow: "0 8px 24px -4px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                   }}
                 />
               )}

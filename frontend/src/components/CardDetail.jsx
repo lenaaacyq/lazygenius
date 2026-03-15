@@ -72,7 +72,7 @@ export default function CardDetail({ card, onBack }) {
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 原文链接
               </h3>
-              <p className="text-purple-400 font-medium truncate">
+              <p className="text-emerald-300 font-medium truncate">
                 {card.source_url}
               </p>
             </div>
