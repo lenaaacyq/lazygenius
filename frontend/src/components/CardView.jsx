@@ -199,7 +199,7 @@ export default function CardView({
               </div>
             </div>
 
-            <div className="px-6 pb-[calc(env(safe-area-inset-bottom)+20px)] pt-3">
+            <div className="px-6 pb-6 pt-3">
               {isPlaceholder ? (
                 <p className="text-xs text-gray-500 font-medium text-center">
                   粘贴链接生成你的第一张卡
