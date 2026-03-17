@@ -270,7 +270,7 @@ export default function Flashcard() {
               </div>
 
               {card ? (
-                <div className="flex-1 min-h-0 flex items-start pt-3">
+                <div className="flex-1 min-h-0 flex items-start pt-6">
                   <CardView
                     key={card.id}
                     card={card}

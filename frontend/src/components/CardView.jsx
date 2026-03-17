@@ -65,7 +65,7 @@ export default function CardView({
       : { x: 0, opacity: 1, scale: 1 };
 
   return (
-    <div className="flex flex-col items-center justify-start px-6 py-0 w-full flex-1">
+    <div className="flex flex-col items-center justify-start px-8 py-0 w-full flex-1">
       <motion.div
         initial={enterInitial}
         animate={{ x: 0, opacity: 1, scale: 1 }}
@@ -152,12 +152,12 @@ export default function CardView({
               event.currentTarget.scrollTop += event.deltaY;
             }}
           >
-            <div className="px-6 pt-4 pb-2 text-center">
+            <div className="px-6 pt-6 pb-3 text-center">
               <p className="text-xs text-gray-500 font-medium">
                 {isPlaceholder ? "示例卡片 · 粘贴链接生成" : "← 左滑归档 · 右滑保留 →"}
               </p>
             </div>
-            <div className="px-6 pt-2 pb-4">
+            <div className="px-6 pt-3 pb-5">
               <h2
                 className={`${titleClassName} font-bold text-white leading-snug tracking-tight whitespace-nowrap`}
                 title={title}
@@ -166,11 +166,11 @@ export default function CardView({
               </h2>
             </div>
 
-            <div className="px-6 pb-4 space-y-2.5">
+            <div className="px-6 pb-5 space-y-3">
               {keyPoints.map((point, index) => (
                 <div
                   key={index}
-                  className="flex items-start gap-3 p-2.5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/5"
+                  className="flex items-start gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/5"
                   style={{
                     boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05)",
                   }}
@@ -186,7 +186,7 @@ export default function CardView({
             </div>
 
             <div
-              className="mx-6 mb-5 p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/15 to-orange-500/15 border border-amber-500/30 backdrop-blur-sm"
+              className="mx-6 mb-6 p-4 rounded-2xl bg-gradient-to-br from-amber-500/15 to-orange-500/15 border border-amber-500/30 backdrop-blur-sm"
               style={{
                 boxShadow: "0 8px 24px -8px rgba(251, 191, 36, 0.3), inset 0 1px 0 rgba(251, 191, 36, 0.1)",
               }}
@@ -199,7 +199,9 @@ export default function CardView({
               </div>
             </div>
 
-            <div className="px-6 pb-5 pt-2">
+            <div className="h-6" />
+
+            <div className="sticky bottom-0 px-6 pb-6 pt-3 bg-gradient-to-t from-gray-900/95 via-gray-900/55 to-transparent backdrop-blur">
               {isPlaceholder ? (
                 <p className="text-xs text-gray-500 font-medium text-center">
                   粘贴链接生成你的第一张卡
@@ -208,7 +210,7 @@ export default function CardView({
                 <button
                   data-detail="1"
                   onClick={onCardClick}
-                  className="w-full h-10 rounded-xl bg-white/5 text-gray-200 font-semibold border border-white/10 hover:bg-white/10 transition-colors"
+                  className="w-full h-11 rounded-xl bg-white/5 text-gray-200 font-semibold border border-white/10 hover:bg-white/10 transition-colors"
                 >
                   查看详情
                 </button>
