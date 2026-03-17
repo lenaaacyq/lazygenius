@@ -41,6 +41,8 @@ const LOCAL_PLACEHOLDER_CARD = {
 export default function Flashcard() {
   const [mode, setMode] = useState("mixed");
   const [card, setCard] = useState(LOCAL_PLACEHOLDER_CARD);
+  const [nextCard, setNextCard] = useState(null);
+  const [isPrefetching, setIsPrefetching] = useState(false);
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentView, setCurrentView] = useState({ type: "home" });
@@ -70,28 +72,41 @@ export default function Flashcard() {
     }
   }, []);
 
-  const fetchCard = useCallback(async (nextMode = mode) => {
+  const fetchNextCard = useCallback(async (nextMode = mode) => {
     setError(false);
     try {
       const strategy = resolveStrategy(nextMode);
       const res = await fetchWithTimeout(`${API_BASE}/cards/next?strategy=${strategy}`);
       if (!res.ok) {
         if (res.status !== 404) setError(true);
-        return;
+        return null;
       }
       const data = await res.json();
-      if (data?.status === "placeholder") return;
-      setCard(data);
+      if (data?.status === "placeholder") return null;
+      return data;
     } catch (e) {
       console.error("Failed to fetch card:", e);
-      setCard(null);
       setError(true);
+      return null;
     }
   }, [fetchWithTimeout, mode]);
+
+  const fetchCard = useCallback(async (nextMode = mode) => {
+    const data = await fetchNextCard(nextMode);
+    if (!data) {
+      setCard(null);
+      return;
+    }
+    setCard(data);
+  }, [fetchNextCard, mode]);
 
   useEffect(() => {
     fetchCard(mode);
   }, [mode, fetchCard]);
+
+  useEffect(() => {
+    setNextCard(null);
+  }, [mode]);
 
   useEffect(() => {
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
@@ -109,6 +124,24 @@ export default function Flashcard() {
       setEnterFrom(null);
     }
   }, [card?.id]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!card || card?.status === "placeholder") return undefined;
+    if (isPrefetching || nextCard) return undefined;
+    setIsPrefetching(true);
+    fetchNextCard(mode)
+      .then((data) => {
+        if (cancelled || !data) return;
+        setNextCard(data);
+      })
+      .finally(() => {
+        if (!cancelled) setIsPrefetching(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [card?.id, fetchNextCard, isPrefetching, mode, nextCard]);
 
   const navigate = (path) => {
     if (path === "/") {
@@ -138,7 +171,12 @@ export default function Flashcard() {
         console.error("Failed to submit review:", e);
         toast.error("保留失败，请重试");
       });
-    fetchCard(mode);
+    if (nextCard) {
+      setCard(nextCard);
+      setNextCard(null);
+    } else {
+      fetchCard(mode);
+    }
   };
 
   const handleArchive = async () => {
@@ -161,7 +199,12 @@ export default function Flashcard() {
         console.error("Failed to submit review:", e);
         toast.error("归档失败，请重试");
       });
-    fetchCard(mode);
+    if (nextCard) {
+      setCard(nextCard);
+      setNextCard(null);
+    } else {
+      fetchCard(mode);
+    }
   };
 
   const handleGenerate = async (payload) => {

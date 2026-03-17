@@ -199,9 +199,9 @@ export default function CardView({
               </div>
             </div>
 
-            <div className="h-6" />
+            <div className="h-3" />
 
-            <div className="sticky bottom-0 px-6 pb-6 pt-3 bg-gradient-to-t from-gray-900/95 via-gray-900/55 to-transparent backdrop-blur">
+            <div className="sticky bottom-0 px-6 pb-6 pt-2 bg-gradient-to-t from-gray-900/95 via-gray-900/55 to-transparent backdrop-blur">
               {isPlaceholder ? (
                 <p className="text-xs text-gray-500 font-medium text-center">
                   粘贴链接生成你的第一张卡
