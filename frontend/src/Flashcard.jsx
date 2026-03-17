@@ -124,24 +124,21 @@ export default function Flashcard() {
       return;
     }
     setEnterFrom("left");
-    try {
-      const isAdminPath = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
-      await fetchWithTimeout(`${API_BASE}/cards/${card.id}/review`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(isAdminPath && ADMIN_KEY ? { "x-admin-key": ADMIN_KEY } : {}),
-        },
-        body: JSON.stringify({ action: "keep" }),
+    const isAdminPath = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+    fetchWithTimeout(`${API_BASE}/cards/${card.id}/review`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(isAdminPath && ADMIN_KEY ? { "x-admin-key": ADMIN_KEY } : {}),
+      },
+      body: JSON.stringify({ action: "keep" }),
+    })
+      .then(() => toast.success("已保留"))
+      .catch((e) => {
+        console.error("Failed to submit review:", e);
+        toast.error("保留失败，请重试");
       });
-      toast.success("已保留");
-    } catch (e) {
-      console.error("Failed to submit review:", e);
-      toast.error("保留失败，请重试");
-    }
-    setTimeout(() => {
-      fetchCard(mode);
-    }, 400);
+    fetchCard(mode);
   };
 
   const handleArchive = async () => {
@@ -150,24 +147,21 @@ export default function Flashcard() {
       return;
     }
     setEnterFrom("right");
-    try {
-      const isAdminPath = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
-      await fetchWithTimeout(`${API_BASE}/cards/${card.id}/review`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(isAdminPath && ADMIN_KEY ? { "x-admin-key": ADMIN_KEY } : {}),
-        },
-        body: JSON.stringify({ action: "archive" }),
+    const isAdminPath = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+    fetchWithTimeout(`${API_BASE}/cards/${card.id}/review`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(isAdminPath && ADMIN_KEY ? { "x-admin-key": ADMIN_KEY } : {}),
+      },
+      body: JSON.stringify({ action: "archive" }),
+    })
+      .then(() => toast("已归档"))
+      .catch((e) => {
+        console.error("Failed to submit review:", e);
+        toast.error("归档失败，请重试");
       });
-      toast("已归档");
-    } catch (e) {
-      console.error("Failed to submit review:", e);
-      toast.error("归档失败，请重试");
-    }
-    setTimeout(() => {
-      fetchCard(mode);
-    }, 400);
+    fetchCard(mode);
   };
 
   const handleGenerate = async (payload) => {
