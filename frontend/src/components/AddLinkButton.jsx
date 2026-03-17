@@ -13,7 +13,7 @@ export default function AddLinkButton({ onClick }) {
     >
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 opacity-50 blur-2xl group-active:opacity-70 transition-opacity" />
       <div
-        className="relative h-14 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-700 flex items-center justify-center gap-3 overflow-hidden border border-white/20"
+        className="relative h-12 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-700 flex items-center justify-center gap-3 overflow-hidden border border-white/20"
         style={{
           boxShadow: "0 12px 32px -8px rgba(16, 185, 129, 0.45), inset 0 2px 0 rgba(255, 255, 255, 0.2), inset 0 -2px 0 rgba(0, 0, 0, 0.2)",
         }}

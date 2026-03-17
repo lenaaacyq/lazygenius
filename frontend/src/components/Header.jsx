@@ -9,9 +9,9 @@ export default function Header({ mode, onModeChange }) {
   ];
 
   return (
-    <header className="px-6 pt-6 pb-6">
+    <header className="px-6 pt-5 pb-4">
       <div className="max-w-md mx-auto">
-        <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-center gap-3 mb-4">
           <BrandLogo size="md" />
           <h1 className="text-2xl font-bold tracking-tight text-white">
             LazyGenius
@@ -23,7 +23,7 @@ export default function Header({ mode, onModeChange }) {
             <button
               key={m.key}
               onClick={() => onModeChange(m.key)}
-              className="relative flex-1 py-2.5 text-sm font-semibold transition-all rounded-xl"
+              className="relative flex-1 py-2 text-sm font-semibold transition-all rounded-xl"
             >
               {mode === m.key && (
                 <motion.div
