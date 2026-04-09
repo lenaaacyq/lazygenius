@@ -2,5 +2,6 @@
   "app_lang": "node",
   "node_version": "18",
   "build_command": "npm run build",
-  "start_command": "npm run start"
+  "start_command": "serve -s dist -l 8080",
+  "install_command": "npm install"
 }

@@ -10,7 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "npx serve -s dist -l 8080",
+    "start": "serve -s dist -l 8080",
     "use:local": "node scripts/switch-api.mjs local",
     "use:phone": "node scripts/switch-api.mjs phone"
   },
