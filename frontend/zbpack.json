@@ -2,6 +2,6 @@
   "app_lang": "node",
   "node_version": "18",
   "build_command": "npm run build",
-  "start_command": "node server.js",
+  "start_command": "echo 'Starting...' && ls -la && node server.js",
   "install_command": "npm install"
 }
