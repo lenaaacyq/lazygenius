@@ -1,13 +1,13 @@
 FROM node:18-slim AS builder
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
-COPY . .
+COPY frontend/ .
 RUN npm run build
 
 FROM node:18-slim
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
-COPY server.js ./
+COPY frontend/server.js ./
 EXPOSE 8080
 CMD ["node", "server.js"]
